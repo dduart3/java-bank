@@ -1,6 +1,7 @@
 package com.bank.controller;
 
 import com.bank.service.BankService;
+import com.bank.model.Account;
 import com.bank.model.Transaction;
 import java.util.List;
 import java.time.LocalDateTime;
@@ -36,8 +37,14 @@ public class BankController {
         return bankService.getTransactionHistory(accountNumber);
     }
 
-    public double getBalance(String accountNumber) {
-        return bankService.getBalance(accountNumber);
+    public double getAccountBalance(String accountNumber) {
+        return bankService.getAccountBalance(accountNumber);
+    }
+
+    public String getAccountOwnerName(String accountNumber) {
+        return bankService.findAccount(accountNumber)
+            .map(Account::getOwnerName)
+            .orElse("Unknown");
     }
 
     public String getTransactionHistoryString(String accountNumber) {
@@ -48,9 +55,6 @@ public class BankController {
         }
         return sb.toString();
     }
-
-    
-
     
     public String getLastTransaction(String accountNumber) {
         return bankService.getLastTransaction(accountNumber);

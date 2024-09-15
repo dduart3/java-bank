@@ -5,30 +5,30 @@ import java.util.List;
 import java.io.Serializable;
 
 public abstract class Account implements Serializable {
+    private static final long serialVersionUID = 1L;
     protected String accountNumber;
     protected String password;
     protected double balance;
     protected String ownerName;
-    protected List<Transaction> transactionHistory;
     protected List<Transaction> transactions;
-    private static final long serialVersionUID = 1L;
     private boolean frozen = false;
-
-
-
-
+    
     public Account(String accountNumber, String ownerName, String password) {
         this.accountNumber = accountNumber;
         this.password = password;
         this.ownerName = ownerName;
         this.balance = 0.0;
-        this.transactionHistory = new ArrayList<>();
         this.transactions = new ArrayList<>();
     }
 
     public String getAccountNumber() {
         return accountNumber;
     }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
     public double getBalance() {
         return balance;
     }
@@ -44,14 +44,7 @@ public abstract class Account implements Serializable {
     public void setFrozen(boolean frozen) {
         this.frozen = frozen;
     }
-
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public List<Transaction> getTransactionHistory() {
-        return new ArrayList<>(transactionHistory);
-    }
+    
     public void addTransaction(String type, double amount, String description) {
         transactions.add(new Transaction(type, amount, description));
     }
@@ -74,7 +67,4 @@ public abstract class Account implements Serializable {
         return false;
     }
 
-    
-
-    // Getters and setters
 }

@@ -36,7 +36,7 @@ public class BankService {
         accounts.add(new AdminAccount(accountNumber, ownerName,password));
     }
 
-    public double getBalance(String accountNumber) {
+    public double getAccountBalance(String accountNumber) {
         Optional<Account> account = findAccount(accountNumber);
         return account.map(Account::getBalance).orElse(0.0);
     }
@@ -97,7 +97,7 @@ public class BankService {
         return new ArrayList<>();
     }
 
-    private Optional<Account> findAccount(String accountNumber) {
+    public Optional<Account> findAccount(String accountNumber) {
         return accounts.stream()
                 .filter(account -> account.getAccountNumber().equals(accountNumber))
                 .findFirst();

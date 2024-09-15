@@ -18,8 +18,6 @@ public class Transaction implements Serializable {
         this.description = description;
     }
 
-    // Getters
-        // Getters for all fields
 
         @Override
         public String toString() {
