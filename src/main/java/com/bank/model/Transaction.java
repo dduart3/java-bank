@@ -17,8 +17,7 @@ public class Transaction implements Serializable {
         this.timestamp = LocalDateTime.now();
         this.description = description;
     }
-
-
+    
         @Override
         public String toString() {
             return String.format("%s - %s: $%.2f - %s", timestamp, type, amount, description);

@@ -4,6 +4,7 @@ import com.bank.controller.BankController;
 import com.bank.view.LoginGUI;
 import javax.swing.SwingUtilities;
 
+
 public final class App {
 
     public static void main(String[] args) {

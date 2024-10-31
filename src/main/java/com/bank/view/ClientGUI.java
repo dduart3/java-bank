@@ -53,7 +53,8 @@ public class ClientGUI extends JFrame {
         sidebar.setBackground(new Color(44, 62, 80));
         sidebar.setPreferredSize(new Dimension(200, getHeight()));
 
-        String[] options = { "Dashboard", "Deposit", "Withdraw",  "Transfer", "Transaction History", "Account Info", "Logout" };
+        String[] options = { "Dashboard", "Deposit", "Withdraw", "Transfer", "Transaction History", "Account Info",
+                "Logout" };
         for (String option : options) {
             JButton button = new JButton(option);
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -63,18 +64,16 @@ public class ClientGUI extends JFrame {
             button.setBackground(new Color(52, 152, 219));
             button.setFocusPainted(false);
             button.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (option.equals("Logout")) {
-                        // Handle logout
-                        dispose();
-                        new LoginGUI(controller).setVisible(true);
-                    } else {
-                        CardLayout cl = (CardLayout) contentPanel.getLayout();
-                        cl.show(contentPanel, option);
-                    }
+            button.addActionListener(e -> {
+                if (option.equals("Logout")) {
+                    // Handle logout
+                    dispose();
+                    new LoginGUI(controller).setVisible(true);
+                } else {
+                    CardLayout cl = (CardLayout) contentPanel.getLayout();
+                    cl.show(contentPanel, option);
                 }
+
             });
             sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
             sidebar.add(button);
@@ -89,7 +88,6 @@ public class ClientGUI extends JFrame {
         contentPanel.add(createDashboardPanel(), "Dashboard", 0); // Add the new dashboard
         cl.show(contentPanel, "Dashboard");
     }
-    
 
     private JPanel createDashboardPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
@@ -130,23 +128,23 @@ public class ClientGUI extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.WEST;
-    
+
         JLabel titleLabel = new JLabel("Deposit Money");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         panel.add(titleLabel, gbc);
-    
+
         JLabel amountLabel = new JLabel("Amount to Deposit:");
         gbc.gridy = 1;
         gbc.gridwidth = 1;
         panel.add(amountLabel, gbc);
-    
+
         JTextField amountField = new JTextField(15);
         gbc.gridx = 1;
         panel.add(amountField, gbc);
-    
+
         JButton depositButton = new JButton("Deposit");
         depositButton.setBackground(new Color(46, 204, 113));
         depositButton.setForeground(Color.WHITE);
@@ -156,24 +154,26 @@ public class ClientGUI extends JFrame {
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(depositButton, gbc);
-    
+
         depositButton.addActionListener(e -> {
             try {
                 double amount = Double.parseDouble(amountField.getText());
                 boolean success = controller.deposit(accountNumber, amount);
                 if (success) {
-                    JOptionPane.showMessageDialog(panel, "Deposit successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(panel, "Deposit successful!", "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
                     amountField.setText("");
                     updateDashboard(); // Update the dashboard
                 } else {
-                    JOptionPane.showMessageDialog(panel, "Deposit failed. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(panel, "Deposit failed. Please try again.", "Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(panel, "Invalid amount. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(panel, "Invalid amount. Please enter a valid number.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
-        
-    
+
         return panel;
     }
 
@@ -183,23 +183,23 @@ public class ClientGUI extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.WEST;
-    
+
         JLabel titleLabel = new JLabel("Withdraw Money");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         panel.add(titleLabel, gbc);
-    
+
         JLabel amountLabel = new JLabel("Amount to Withdraw:");
         gbc.gridy = 1;
         gbc.gridwidth = 1;
         panel.add(amountLabel, gbc);
-    
+
         JTextField amountField = new JTextField(15);
         gbc.gridx = 1;
         panel.add(amountField, gbc);
-    
+
         JButton withdrawButton = new JButton("Withdraw");
         withdrawButton.setBackground(new Color(231, 76, 60));
         withdrawButton.setForeground(Color.WHITE);
@@ -209,22 +209,25 @@ public class ClientGUI extends JFrame {
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(withdrawButton, gbc);
-    
+
         withdrawButton.addActionListener(e -> {
             try {
                 double amount = Double.parseDouble(amountField.getText());
                 boolean success = controller.withdraw(accountNumber, amount);
                 if (success) {
-                    JOptionPane.showMessageDialog(panel, "Withdrawal successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(panel, "Withdrawal successful!", "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
                     amountField.setText("");
                 } else {
-                    JOptionPane.showMessageDialog(panel, "Withdrawal failed. Please check your balance and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(panel, "Withdrawal failed. Please check your balance and try again.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(panel, "Invalid amount. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(panel, "Invalid amount. Please enter a valid number.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
-    
+
         return panel;
     }
 
@@ -346,7 +349,9 @@ public class ClientGUI extends JFrame {
                 controller.getAccountOwnerName(accountNumber),
                 String.format("$%.2f", controller.getAccountBalance(accountNumber)),
                 "Client",
-                "N/A" // Assuming creation date is not available in the current implementation
+                controller.getAccount(accountNumber).getCreationDateFormatted() // Assuming creation date is not
+                                                                                // available in the current
+                                                                                // implementation
         };
 
         for (int i = 0; i < labels.length; i++) {

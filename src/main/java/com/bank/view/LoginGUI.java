@@ -12,10 +12,11 @@ public class LoginGUI extends JFrame {
     private JTextField accountNumberField;
     private JPasswordField passwordField;
     private JButton loginButton;
+
     public LoginGUI(BankController controller) {
         FlatDarkLaf.setup();
 
-        setTitle("Java Bank - Login");
+        setTitle("URBE Bank - Login");
         setSize(400, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -41,41 +42,48 @@ public class LoginGUI extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 0, 10, 0);
 
-        // Logo placeholder
-        JLabel logoLabel = new JLabel("JAVA BANK", SwingConstants.CENTER);
-        logoLabel.setFont(new Font("Arial", Font.BOLD, 32));
-        logoLabel.setForeground(Color.WHITE);
+        // Inside the LoginGUI constructor, before adding other components
+        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/images/urbe.png"));
+        Image scaledImage = logoIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        JLabel logoLabel = new JLabel(new ImageIcon(scaledImage));
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
-        gbc.ipady = 40;
+        gbc.insets = new Insets(20, 0, 20, 0);
         mainPanel.add(logoLabel, gbc);
 
-        // Reset ipady
-        gbc.ipady = 0;
+        JLabel titleLabel = new JLabel("URBE BANK", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setForeground(Color.WHITE);
+        gbc.gridy = 1;
+        gbc.insets = new Insets(0, 0, 20, 0);
+        mainPanel.add(titleLabel, gbc);
 
-        // Account Number Field
+        // Reset insets for other components
+        gbc.insets = new Insets(10, 10, 10, 10);
+
+        // Adjust the position of other components
         JLabel accountLabel = new JLabel("Account Number");
         accountLabel.setForeground(Color.WHITE);
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.gridwidth = 2;
         mainPanel.add(accountLabel, gbc);
 
         accountNumberField = new JTextField(20);
         accountNumberField.setFont(new Font("Arial", Font.PLAIN, 14));
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         mainPanel.add(accountNumberField, gbc);
 
         // Password Field
         JLabel passwordLabel = new JLabel("Password");
         passwordLabel.setForeground(Color.WHITE);
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         mainPanel.add(passwordLabel, gbc);
 
         passwordField = new JPasswordField(20);
         passwordField.setFont(new Font("Arial", Font.PLAIN, 14));
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         mainPanel.add(passwordField, gbc);
 
         // Login Button
@@ -85,7 +93,7 @@ public class LoginGUI extends JFrame {
         loginButton.setForeground(Color.WHITE);
         loginButton.setFocusPainted(false);
         loginButton.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.insets = new Insets(20, 0, 0, 0);
         mainPanel.add(loginButton, gbc);
 
@@ -106,9 +114,9 @@ public class LoginGUI extends JFrame {
                 } else {
                     System.out.println("Showing error message");
                     JOptionPane.showMessageDialog(LoginGUI.this,
-                        "Invalid credentials. Please try again.",
-                        "Login Failed",
-                        JOptionPane.ERROR_MESSAGE);
+                            "Invalid credentials. Please try again.",
+                            "Login Failed",
+                            JOptionPane.ERROR_MESSAGE);
                     passwordField.setText("");
                 }
             }

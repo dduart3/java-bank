@@ -69,6 +69,9 @@ public class BankController {
         return bankService.setTransactionLimit(accountNumber, limit);
     }
 
+    public Account getAccount(String accountNumber) {
+        return bankService.getAccount(accountNumber);
+    }
 
     public String getAllAccountsInfo() {
         return bankService.getAllAccountsInfo();

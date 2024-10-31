@@ -33,12 +33,21 @@ public class BankService {
     }
 
     public void createAdminAccount(String accountNumber, String ownerName, String password) {
-        accounts.add(new AdminAccount(accountNumber, ownerName,password));
+        accounts.add(new AdminAccount(accountNumber, ownerName, password));
     }
 
     public double getAccountBalance(String accountNumber) {
         Optional<Account> account = findAccount(accountNumber);
         return account.map(Account::getBalance).orElse(0.0);
+    }
+
+    public Account getAccount(String accountNumber) {
+        for (Account account : accounts) {
+            if (account.getAccountNumber().equals(accountNumber)) {
+                return account;
+            }
+        }
+        return null;
     }
 
     public String getAllAccountsInfo() {

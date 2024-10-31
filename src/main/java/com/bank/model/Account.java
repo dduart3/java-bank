@@ -3,6 +3,8 @@ package com.bank.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public abstract class Account implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -10,6 +12,9 @@ public abstract class Account implements Serializable {
     protected String password;
     protected double balance;
     protected String ownerName;
+    protected String firstName;
+    protected String lastName;
+    private LocalDateTime creationDate;
     protected List<Transaction> transactions;
     private boolean frozen = false;
     
@@ -18,6 +23,7 @@ public abstract class Account implements Serializable {
         this.password = password;
         this.ownerName = ownerName;
         this.balance = 0.0;
+        this.creationDate = LocalDateTime.now();
         this.transactions = new ArrayList<>();
     }
 
@@ -27,6 +33,14 @@ public abstract class Account implements Serializable {
 
     public String getOwnerName() {
         return ownerName;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public String getCreationDateFormatted () {
+        return creationDate.format(DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm:ss"));  
     }
 
     public double getBalance() {
