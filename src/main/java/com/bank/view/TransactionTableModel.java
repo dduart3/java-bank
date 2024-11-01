@@ -1,8 +1,10 @@
 package com.bank.view;
 
-import com.bank.model.Transaction;
-import javax.swing.table.AbstractTableModel;
 import java.util.List;
+
+import javax.swing.table.AbstractTableModel;
+
+import com.bank.model.Transaction;
 
 public class TransactionTableModel extends AbstractTableModel {
     private List<Transaction> transactions;
@@ -26,8 +28,6 @@ public class TransactionTableModel extends AbstractTableModel {
     public String getColumnName(int column) {
         return columnNames[column];
     }
-
-    
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {

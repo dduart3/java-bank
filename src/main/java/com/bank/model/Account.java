@@ -1,38 +1,49 @@
 package com.bank.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 public abstract class Account implements Serializable {
     private static final long serialVersionUID = 1L;
-    protected String accountNumber;
-    protected String password;
-    protected double balance;
-    protected String ownerName;
-    protected String firstName;
-    protected String lastName;
-    private LocalDateTime creationDate;
-    protected List<Transaction> transactions;
-    private boolean frozen = false;
+    private final String id;
+    private final LocalDateTime creationDate;
+   
+    private String username;  
+    private String password;
+    private String firstName;
+    private String lastName;
+    private final AccountType accountType;
     
-    public Account(String accountNumber, String ownerName, String password) {
-        this.accountNumber = accountNumber;
-        this.password = password;
-        this.ownerName = ownerName;
-        this.balance = 0.0;
+    public Account(String username, String password, AccountType accountType, String firstName, String lastName) {
+        this.id = UUID.randomUUID().toString();
         this.creationDate = LocalDateTime.now();
-        this.transactions = new ArrayList<>();
+        this.username = username;
+        this.accountType = accountType;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
-    public String getAccountNumber() {
-        return accountNumber;
+    public String getId() {
+        return id;
     }
 
-    public String getOwnerName() {
-        return ownerName;
+    public String getUsername() {
+        return username;
+    }
+
+    public String getOwnerFirstName() {
+        return firstName;
+    }
+
+    public String getOwnerLastName() {
+        return lastName;
+    }
+
+    public String getOwnerFullName() {
+        return firstName + " " + lastName;
     }
 
     public LocalDateTime getCreationDate() {
@@ -43,42 +54,59 @@ public abstract class Account implements Serializable {
         return creationDate.format(DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm:ss"));  
     }
 
-    public double getBalance() {
-        return balance;
+    public AccountType getAccountType() {
+        return accountType;
     }
 
-    public boolean authenticate(String inputPassword) {
-        return this.password.equals(inputPassword);
+    public boolean authenticate(String username, String password) {
+        return this.username.equals(username) && this.password.equals(password);
     }
 
-    public boolean isFrozen() {
-        return frozen;
-    }
-    
-    public void setFrozen(boolean frozen) {
-        this.frozen = frozen;
-    }
-    
-    public void addTransaction(String type, double amount, String description) {
-        transactions.add(new Transaction(type, amount, description));
-    }
-
-    public List<Transaction> getTransactions() {
-        return new ArrayList<>(transactions);
-    }
-    
-    public void deposit(double amount) {
-        balance += amount;
-        addTransaction("Deposit", amount, "Regular deposit");
-    }
-    
-    public boolean withdraw(double amount) {
-        if (balance >= amount) {
-            balance -= amount;
-            addTransaction("Withdrawal", -amount, "Regular withdrawal");
+    public boolean changePassword(String oldPassword, String newPassword) {
+        if (this.password.equals(oldPassword)) {
+            this.password = newPassword;
             return true;
         }
         return false;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public boolean changeUsername(String newUsername, String password) {
+        if (this.password.equals(password)) {
+            this.username = newUsername;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean changeFirstName(String newFirstName, String password) {
+        if (this.password.equals(password)) {
+            this.firstName = newFirstName;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean changeLastName(String newLastName, String password) {
+        if (this.password.equals(password)) {
+            this.lastName = newLastName;
+            return true;
+        }
+        return false;
+    }
 }
