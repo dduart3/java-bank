@@ -1,125 +1,150 @@
 package com.bank.view;
 
-import com.bank.controller.BankController;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+import com.bank.controller.AuthController;
+import com.bank.model.AccountType;
 import com.formdev.flatlaf.FlatDarkLaf;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class LoginGUI extends JFrame {
-    private JTextField accountNumberField;
-    private JPasswordField passwordField;
-    private JButton loginButton;
+    private final JTextField usernameField;
+    private final JPasswordField passwordField;
+    private final AccountType accountType;
+    private final MainLoginGUI mainLoginGUI;
+    private final AuthController authController;
 
-    public LoginGUI(BankController controller) {
+    static {
         FlatDarkLaf.setup();
+    }
 
-        setTitle("URBE Bank - Login");
-        setSize(400, 500);
+    public LoginGUI(AccountType accountType, MainLoginGUI mainLoginGUI) {
+        
+        this.accountType = accountType;
+        this.mainLoginGUI = mainLoginGUI;
+        this.authController = new AuthController();
+
+        setTitle("Bank System - " + accountType + " Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400, 300);
         setLocationRelativeTo(null);
 
-        JPanel mainPanel = new JPanel(new GridBagLayout()) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g;
-                g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-                int w = getWidth(), h = getHeight();
-                Color color1 = new Color(44, 62, 80);
-                Color color2 = new Color(52, 152, 219);
-                GradientPaint gp = new GradientPaint(0, 0, color1, w, h, color2);
-                g2d.setPaint(gp);
-                g2d.fillRect(0, 0, w, h);
-            }
-        };
-        mainPanel.setBorder(new EmptyBorder(20, 40, 20, 40));
-        setContentPane(mainPanel);
-
+        JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 0, 10, 0);
+        gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Inside the LoginGUI constructor, before adding other components
-        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/images/urbe.png"));
-        Image scaledImage = logoIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-        JLabel logoLabel = new JLabel(new ImageIcon(scaledImage));
+        // Type indicator
+        JLabel typeLabel = new JLabel(accountType + " Login");
+        typeLabel.setFont(new Font("Arial", Font.BOLD, 20));
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
-        gbc.insets = new Insets(20, 0, 20, 0);
-        mainPanel.add(logoLabel, gbc);
+        panel.add(typeLabel, gbc);
 
-        JLabel titleLabel = new JLabel("URBE BANK", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        titleLabel.setForeground(Color.WHITE);
+        // Username field
         gbc.gridy = 1;
-        gbc.insets = new Insets(0, 0, 20, 0);
-        mainPanel.add(titleLabel, gbc);
+        gbc.gridwidth = 1;
+        panel.add(new JLabel("Username:"), gbc);
+        usernameField = new JTextField(20);
+        gbc.gridx = 1;
+        panel.add(usernameField, gbc);
 
-        // Reset insets for other components
-        gbc.insets = new Insets(10, 10, 10, 10);
-
-        // Adjust the position of other components
-        JLabel accountLabel = new JLabel("Account Number");
-        accountLabel.setForeground(Color.WHITE);
+        // Password field
         gbc.gridx = 0;
         gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        mainPanel.add(accountLabel, gbc);
-
-        accountNumberField = new JTextField(20);
-        accountNumberField.setFont(new Font("Arial", Font.PLAIN, 14));
-        gbc.gridy = 3;
-        mainPanel.add(accountNumberField, gbc);
-
-        // Password Field
-        JLabel passwordLabel = new JLabel("Password");
-        passwordLabel.setForeground(Color.WHITE);
-        gbc.gridy = 4;
-        mainPanel.add(passwordLabel, gbc);
-
+        panel.add(new JLabel("Password:"), gbc);
         passwordField = new JPasswordField(20);
-        passwordField.setFont(new Font("Arial", Font.PLAIN, 14));
-        gbc.gridy = 5;
-        mainPanel.add(passwordField, gbc);
+        gbc.gridx = 1;
+        panel.add(passwordField, gbc);
 
-        // Login Button
-        loginButton = new JButton("Login");
-        loginButton.setFont(new Font("Arial", Font.BOLD, 14));
-        loginButton.setBackground(new Color(46, 204, 113));
-        loginButton.setForeground(Color.WHITE);
-        loginButton.setFocusPainted(false);
-        loginButton.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-        gbc.gridy = 6;
-        gbc.insets = new Insets(20, 0, 0, 0);
-        mainPanel.add(loginButton, gbc);
+        // Buttons
+        JPanel buttonPanel = new JPanel();
+        JButton loginButton = new JButton("Login");
+        JButton backButton = new JButton("Back");
 
-        loginButton.addActionListener(new ActionListener() {
+        loginButton.addActionListener(e -> handleLogin());
+        backButton.addActionListener(e -> handleBack());
+
+        buttonPanel.add(loginButton);
+        buttonPanel.add(backButton);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        panel.add(buttonPanel, gbc);
+
+        add(panel);
+
+         Color accentColor = accountType == AccountType.ADMIN ? 
+            new Color(255, 69, 0) :  // Orange-red for admin
+            new Color(0, 150, 136);  // Teal for client
+        
+        typeLabel.setForeground(accentColor);
+        loginButton.setBackground(accentColor);
+        
+        // Add hover effects
+        loginButton.addMouseListener(new MouseAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                String accountNumber = accountNumberField.getText();
-                String password = new String(passwordField.getPassword());
-                String accountType = controller.authenticateUser(accountNumber, password);
-                if (accountType != "INVALID") {
-                    if (accountType.equals("ADMIN")) {
-                        new AdminGUI(controller).setVisible(true);
-                        dispose();
-                    } else if (accountType.equals("CLIENT")) {
-                        new ClientGUI(controller, accountNumber).setVisible(true);
-                        dispose();
-                    }
-                } else {
-                    System.out.println("Showing error message");
-                    JOptionPane.showMessageDialog(LoginGUI.this,
-                            "Invalid credentials. Please try again.",
-                            "Login Failed",
-                            JOptionPane.ERROR_MESSAGE);
-                    passwordField.setText("");
-                }
+            public void mouseEntered(MouseEvent e) {
+                loginButton.setBackground(accentColor.brighter());
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                loginButton.setBackground(accentColor);
             }
         });
+
+        // Style text fields
+        usernameField.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, accentColor));
+        passwordField.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, accentColor));
+    }
+
+    private void handleLogin() {
+        String username = usernameField.getText();
+        String password = new String(passwordField.getPassword());
+
+        String result = authController.login(username, password);
+        
+        if (result.equals(accountType.toString())) {
+            // Open appropriate window based on account type
+            openAppropriateWindow(username);
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid credentials");
+        }
+    }
+
+    private void handleBack() {
+        mainLoginGUI.setVisible(true);
+        this.dispose();
+    }
+
+    private void openAppropriateWindow(String username) {
+        this.dispose();
+
+        switch (accountType ) {
+            case ADMIN:
+                new AdminGUI(username).setVisible(true);
+                break;
+            case CLIENT:
+                new ClientGUI(username).setVisible(true);
+                break;
+            default:
+                new ClientGUI(username).setVisible(true);
+                break;
+        }
     }
 }

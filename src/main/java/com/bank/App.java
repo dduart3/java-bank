@@ -6,6 +6,8 @@ import com.bank.model.AdminAccount;
 import com.bank.model.ClientAccount;
 import com.bank.repository.AdminAccountRepository;
 import com.bank.repository.ClientAccountRepository;
+import com.bank.view.MainLoginGUI;
+import com.formdev.flatlaf.FlatDarkLaf;
 
 public final class App {
 
@@ -15,8 +17,8 @@ public final class App {
             ClientAccountRepository clientRepository = ClientAccountRepository.getInstance();
 
             // Create some sample accounts for testing
-            clientRepository.save(new ClientAccount("admin", "1234", "David", "Duarte", "1234"));
-            adminRepository.save(new AdminAccount("cliente", "1234", "David", "Duarte"));
+            clientRepository.save(new ClientAccount("cliente", "1234", "David", "Duarte", "1234"));
+            adminRepository.save(new AdminAccount("admin", "1234", "David", "Duarte"));
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 // Save data when the application closes
@@ -24,8 +26,10 @@ public final class App {
                 adminRepository.save();
             }));
 
-            //LoginGUI loginGUI = new LoginGUI(controller);
-            //loginGUI.setVisible(true);
+            FlatDarkLaf.setup();
+            MainLoginGUI loginGUI = new MainLoginGUI();
+            loginGUI.setVisible(true);
+            
         });
     }
 }

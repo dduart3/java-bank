@@ -1,244 +1,116 @@
 
 package com.bank.view;
 
-import com.bank.controller.BankController;
-import com.bank.model.Account;
-import com.bank.model.AdminAccount;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import com.bank.controller.AdminController;
 import com.formdev.flatlaf.FlatDarkLaf;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class AdminGUI extends JFrame {
-    private BankController controller;
-    private JPanel contentPanel;
-
-    public AdminGUI(BankController controller) {
-        this.controller = controller;
+    static {
         FlatDarkLaf.setup();
+    }
 
-        setTitle("Java Bank - Admin Dashboard");
-        setSize(1000, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    private final String username;
+    private final AdminController adminController;
+
+    public AdminGUI(String username) {
+        this.username = username;
+        this.adminController = new AdminController();
+        
+        setTitle("Admin Dashboard - " + username);
+        setSize(800, 600);
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Main panel with BorderLayout
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        setContentPane(mainPanel);
+        // Create main panel with gradient background
+        JPanel mainPanel = createGradientPanel();
+        mainPanel.setLayout(new BorderLayout());
 
-        // Sidebar
-        JPanel sidebar = createSidebar();
-        mainPanel.add(sidebar, BorderLayout.WEST);
+        // Add navigation panel
+        JPanel navPanel = createNavPanel();
+        mainPanel.add(navPanel, BorderLayout.WEST);
 
-        // Content panel
-        contentPanel = new JPanel();
-        contentPanel.setLayout(new CardLayout());
+        // Add content panel
+        JPanel contentPanel = new JPanel(new CardLayout());
         mainPanel.add(contentPanel, BorderLayout.CENTER);
 
-        // Add different content panels
-        contentPanel.add(createDashboardPanel(), "Dashboard");
-        contentPanel.add(createAccountManagementPanel(), "Account Management");
-
+        add(mainPanel);
     }
 
-    private JPanel createSidebar() {
-        JPanel sidebar = new JPanel();
-        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-        sidebar.setBackground(new Color(44, 62, 80));
-        sidebar.setPreferredSize(new Dimension(200, getHeight()));
+    private JPanel createGradientPanel() {
+        return new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                int w = getWidth(), h = getHeight();
+                GradientPaint gp = new GradientPaint(0, 0, new Color(33, 33, 33), 
+                    w, h, new Color(18, 18, 18));
+                g2d.setPaint(gp);
+                g2d.fillRect(0, 0, w, h);
+            }
+        };
+    }
 
-        String[] options = { "Dashboard", "Account Management", "Logout" };
+    private JPanel createNavPanel() {
+        JPanel navPanel = new JPanel();
+        navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.Y_AXIS));
+        navPanel.setBackground(new Color(24, 24, 24));
+        navPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        String[] options = {
+            "Dashboard",
+            "Manage Accounts",
+            "View Reports",
+            "System Settings",
+            "Logout"
+        };
+
         for (String option : options) {
-            JButton button = new JButton(option);
-            button.setAlignmentX(Component.CENTER_ALIGNMENT);
-            button.setMaximumSize(new Dimension(180, 40));
-            button.setFont(new Font("Arial", Font.BOLD, 14));
-            button.setForeground(Color.WHITE);
-            button.setBackground(new Color(52, 152, 219));
-            button.setFocusPainted(false);
-            button.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (option.equals("Logout")) {
-                        dispose();
-                        new LoginGUI(controller).setVisible(true);
-                    } else {
-                        CardLayout cl = (CardLayout) contentPanel.getLayout();
-                        cl.show(contentPanel, option);
-                    }
-                }
-            });
-            sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
-            sidebar.add(button);
+            JButton button = createNavButton(option);
+            navPanel.add(button);
+            navPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
 
-        return sidebar;
+        return navPanel;
     }
 
-    private JPanel createDashboardPanel() {
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBackground(new Color(236, 240, 241));
+    private JButton createNavButton(String text) {
+        JButton button = new JButton(text);
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setMaximumSize(new Dimension(200, 40));
+        button.setBackground(new Color(45, 45, 45));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(10, 10, 10, 10);
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(new Color(60, 60, 60));
+            }
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(new Color(45, 45, 45));
+            }
+        });
 
-        JLabel welcomeLabel = new JLabel("Welcome, Admin");
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        panel.add(welcomeLabel, gbc);
-
-        JLabel totalAccountsLabel = new JLabel("Total Accounts: " + 2);
-        totalAccountsLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        panel.add(totalAccountsLabel, gbc);
-
-        // Add more admin-specific summary information here
-
-        return panel;
+        return button;
     }
-
-    private JPanel createAccountManagementPanel() {
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBackground(new Color(236, 240, 241));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.anchor = GridBagConstraints.WEST;
-
-        JLabel titleLabel = new JLabel("Account Management");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        panel.add(titleLabel, gbc);
-
-
-        JButton searchButton = new JButton("Search Account");
-        JButton createAccountButton = new JButton("Create New Account");
-        JButton toggleFreezeButton = new JButton("Toggle Account Freeze");
-        JButton setLimitButton = new JButton("Set Transaction Limit");
-        JButton deleteAccountButton = new JButton("Delete Account");
-
-        gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.gridwidth = 2;
-        panel.add(searchButton, gbc);
-
-        gbc.gridy++;
-        panel.add(createAccountButton, gbc);
-
-        gbc.gridy++;
-        panel.add(toggleFreezeButton, gbc);
-
-        gbc.gridy++;
-        panel.add(setLimitButton, gbc);
-
-        gbc.gridy++;
-        panel.add(deleteAccountButton, gbc);
-
-        searchButton.addActionListener(e -> {
-            String accountNumber = JOptionPane.showInputDialog(panel, "Enter account number:", "Search Account", JOptionPane.QUESTION_MESSAGE);
-            if (accountNumber != null && !accountNumber.isEmpty()) {
-                Account account = controller.getAccount(accountNumber);
-                if (account != null) {
-                    String accountInfo = "Account Number: " + account.getAccountNumber() + "\n" +
-                                         "Owner Name: " + account.getOwnerName() + "\n" +
-                                         "Balance: $" + account.getBalance() + "\n" +
-                                         "Account Type: " + (account instanceof AdminAccount ? "Admin" : "Client");
-                    JOptionPane.showMessageDialog(panel, accountInfo, "Account Information", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(panel, "Account not found", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-
-        createAccountButton.addActionListener(e -> {
-            JTextField newAccountNumberField = new JTextField(10);
-            JTextField ownerNameField = new JTextField(10);
-            JPasswordField passwordField = new JPasswordField(10);
-            JComboBox<String> accountTypeCombo = new JComboBox<>(new String[]{"Client", "Admin"});
-        
-            JPanel inputPanel = new JPanel(new GridLayout(0, 2));
-            inputPanel.add(new JLabel("Account Number:"));
-            inputPanel.add(newAccountNumberField);
-            inputPanel.add(new JLabel("Owner Name:"));
-            inputPanel.add(ownerNameField);
-            inputPanel.add(new JLabel("Password:"));
-            inputPanel.add(passwordField);
-            inputPanel.add(new JLabel("Account Type:"));
-            inputPanel.add(accountTypeCombo);
-        
-            int result = JOptionPane.showConfirmDialog(panel, inputPanel, "Create New Account", JOptionPane.OK_CANCEL_OPTION);
-            if (result == JOptionPane.OK_OPTION) {
-                String accountNumber = newAccountNumberField.getText();
-                String ownerName = ownerNameField.getText();
-                String password = new String(passwordField.getPassword());
-                String accountType = (String) accountTypeCombo.getSelectedItem();
-        
-                if (accountType.equals("Admin")) {
-                    controller.createAdminAccount(accountNumber, ownerName, password);
-                } else {
-                    controller.createClientAccount(accountNumber, ownerName, password);
-                }
-                JOptionPane.showMessageDialog(panel, "Account created successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-        
-         
-
-        toggleFreezeButton.addActionListener(e -> {
-            String accountNumber = JOptionPane.showInputDialog(panel, "Enter account number:", "Toggle Account Freeze", JOptionPane.QUESTION_MESSAGE);
-            if (accountNumber != null && !accountNumber.isEmpty()) {
-                Account account = controller.getAccount(accountNumber);
-                if (account != null) {
-                    boolean success = controller.toggleAccountFreeze(accountNumber);
-                    JOptionPane.showMessageDialog(panel, success ? "Account freeze status toggled" : "Failed to toggle account freeze status");
-                } else {
-                    JOptionPane.showMessageDialog(panel, "Account not found", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-        
-        setLimitButton.addActionListener(e -> {
-            String accountNumber = JOptionPane.showInputDialog(panel, "Enter account number:", "Set Transaction Limit", JOptionPane.QUESTION_MESSAGE);
-            if (accountNumber != null && !accountNumber.isEmpty()) {
-                Account account = controller.getAccount(accountNumber);
-                if (account != null) {
-                    String limitStr = JOptionPane.showInputDialog(panel, "Enter new transaction limit:", "Set Transaction Limit", JOptionPane.QUESTION_MESSAGE);
-                    if (limitStr != null && !limitStr.isEmpty()) {
-                        try {
-                            double limit = Double.parseDouble(limitStr);
-                            boolean success = controller.setTransactionLimit(accountNumber, limit);
-                            JOptionPane.showMessageDialog(panel, success ? "Transaction limit set" : "Failed to set transaction limit");
-                        } catch (NumberFormatException ex) {
-                            JOptionPane.showMessageDialog(panel, "Invalid limit amount", "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(panel, "Account not found", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-
-        deleteAccountButton.addActionListener(e -> {
-            String accountNumber = JOptionPane.showInputDialog(panel, "Enter account number to delete:", "Delete Account", JOptionPane.QUESTION_MESSAGE);
-            if (accountNumber != null && !accountNumber.isEmpty()) {
-                Account account = controller.getAccount(accountNumber);
-                if (account != null) {
-                    int confirm = JOptionPane.showConfirmDialog(panel, "Are you sure you want to delete this account?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
-                    if (confirm == JOptionPane.YES_OPTION) {
-                        boolean success = controller.deleteAccount(accountNumber);
-                        JOptionPane.showMessageDialog(panel, success ? "Account deleted successfully" : "Failed to delete account");
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(panel, "Account not found", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-        
-        return panel;
-    }
-
- 
 }
