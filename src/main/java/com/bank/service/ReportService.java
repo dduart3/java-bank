@@ -11,7 +11,7 @@ public class ReportService {
     private final ClientAccountRepository clientRepository;
 
     public ReportService() {
-        this.clientRepository = new ClientAccountRepository();
+        this.clientRepository = ClientAccountRepository.getInstance();
     }
 
     public String generateReport(String reportType) {

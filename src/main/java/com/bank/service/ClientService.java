@@ -9,7 +9,7 @@ public class ClientService {
 
     public ClientService () {
         this.transactionService = new TransactionService();
-        this.clientRepository = new ClientAccountRepository();
+        this.clientRepository = ClientAccountRepository.getInstance();
     }
 
      public double getAccountBalance(String accountNumber) {

@@ -1,22 +1,18 @@
 package com.bank.repository;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.bank.model.AdminAccount;
+import com.bank.model.OperationResult;
 
-public class AdminAccountRepository {
+public class AdminAccountRepository extends IAccountRepository<AdminAccount> {
+
     private static AdminAccountRepository instance;
     private final List<AdminAccount> adminAccounts;
     private static final String FILE_PATH = "admin_accounts.dat";
 
-    public AdminAccountRepository() {
-        this.adminAccounts = loadAccountsFromFile();
+    private AdminAccountRepository() {
+        this.adminAccounts = loadAccounts();
     }
 
     public static AdminAccountRepository getInstance() {
@@ -26,43 +22,28 @@ public class AdminAccountRepository {
         return instance;
     }
 
-    public AdminAccount findByUsername(String username) {
-        return adminAccounts.stream()
-                .filter(account -> account.getUsername().equals(username))
-                .findFirst()
-                .orElse(null);
+    public OperationResult save(AdminAccount account) {
+        return save(adminAccounts, account, FILE_PATH);
+    }
+
+    public OperationResult save() {
+        return save(adminAccounts, FILE_PATH);
     }
 
     public AdminAccount findById(String id) {
-        return adminAccounts.stream()
-                .filter(account -> account.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        return findById(adminAccounts, id);
+    }
+
+    
+    public AdminAccount findByUsername(String username) {
+        return findByUsername(adminAccounts, username);
     }
 
     public List<AdminAccount> findAll() {
-        return new ArrayList<>(adminAccounts);
+        return findAll(adminAccounts);
     }
 
-    @SuppressWarnings("unchecked")
-    private List<AdminAccount> loadAccountsFromFile() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
-            return (List<AdminAccount>) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            return new ArrayList<>();
-        }
-    }
-
-    public void save(AdminAccount account) {
-        adminAccounts.add(account);
-        saveAccountsToFile();
-    }
-
-    private void saveAccountsToFile() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
-            oos.writeObject(adminAccounts);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to save accounts to file", e);
-        }
+    private List<AdminAccount> loadAccounts() {
+        return loadAccountsFromFile(FILE_PATH);
     }
 }

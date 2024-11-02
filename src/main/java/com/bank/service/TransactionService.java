@@ -15,7 +15,7 @@ public class TransactionService {
     private final ClientAccountRepository clientRepository;
 
     public TransactionService() {
-        this.clientRepository = new ClientAccountRepository();
+        this.clientRepository = ClientAccountRepository.getInstance();
     }
 
     public List<Transaction> getTransactionHistory(String accountNumber) {
@@ -39,14 +39,14 @@ public class TransactionService {
                 .collect(Collectors.toList());
     }
 
-      public List<Transaction> getFilteredTransactionHistory(String accountNumber, TransactionType type, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<Transaction> getFilteredTransactionHistory(String accountNumber, TransactionType type, LocalDateTime startDate, LocalDateTime endDate) {
         ClientAccount account = clientRepository.findByAccountNumber(accountNumber);
         if (account != null) {
             return account.getTransactions().stream()
-                .filter(transaction -> type == null || transaction.getType().equals(type))
-                .filter(transaction -> startDate == null || !transaction.getTimestamp().isBefore(startDate))
-                .filter(transaction -> endDate == null || !transaction.getTimestamp().isAfter(endDate))
-                .collect(Collectors.toList());
+                    .filter(transaction -> type == null || transaction.getType().equals(type))
+                    .filter(transaction -> startDate == null || !transaction.getTimestamp().isBefore(startDate))
+                    .filter(transaction -> endDate == null || !transaction.getTimestamp().isAfter(endDate))
+                    .collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
@@ -104,15 +104,15 @@ public class TransactionService {
         if (account == null || amount <= 0 || account.isFrozen() || amount > account.getTransactionLimit()) {
             return false;
         }
-        
+
         account.withdraw(amount);
-        
+
         Transaction withdrawTransaction = new Transaction(
-            TransactionType.WITHDRAWAL,
-            amount,
-            "Withdrawal from account"
+                TransactionType.WITHDRAWAL,
+                amount,
+                "Withdrawal from account"
         );
-        
+
         account.addTransaction(withdrawTransaction);
         return true;
     }

@@ -6,9 +6,9 @@ import java.util.List;
 public class AdminAccount extends Account {
     private static final long serialVersionUID = 3L;
     
-    private List<AdminAction> adminActions;
+    private final List<AdminAction> adminActions;
 
-    public AdminAccount(String username, String firstName, String lastName, String password) {
+    public AdminAccount(String username, String password, String firstName, String lastName ) {
         super(username,password, AccountType.ADMIN, firstName,lastName);
         this.adminActions = new ArrayList<>();
     }

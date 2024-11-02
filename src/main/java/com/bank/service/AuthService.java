@@ -10,8 +10,8 @@ public class AuthService {
     private final AdminAccountRepository adminRepository;
 
     public AuthService() {
-        this.clientRepository = new ClientAccountRepository();
-        this.adminRepository = new AdminAccountRepository();
+        this.adminRepository = AdminAccountRepository.getInstance();
+        this.clientRepository = ClientAccountRepository.getInstance();
     }
 
     public String authenticate(String username, String password) {

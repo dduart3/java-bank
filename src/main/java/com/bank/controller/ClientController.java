@@ -25,11 +25,11 @@ public class ClientController {
         return clientService.withdraw(accountNumber, amount);
     }
 
-    public boolean updateOwnUsername(String accountNumber, String newUsername, String password) {
+    public boolean updateUsername(String accountNumber, String newUsername, String password) {
         return clientService.updateUsername(accountNumber, newUsername, password);
     }
 
-    public boolean updateOwnPassword(String accountNumber, String oldPassword, String newPassword) {
+    public boolean updatePassword(String accountNumber, String oldPassword, String newPassword) {
         return clientService.updatePassword(accountNumber, oldPassword, newPassword);
     }
 }

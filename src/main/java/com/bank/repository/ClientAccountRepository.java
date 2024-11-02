@@ -1,22 +1,18 @@
 package com.bank.repository;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.bank.model.ClientAccount;
+import com.bank.model.OperationResult;
 
-public class ClientAccountRepository {
+public class ClientAccountRepository extends IAccountRepository<ClientAccount> {
+
     private static ClientAccountRepository instance;
     private final List<ClientAccount> clientAccounts;
     private static final String FILE_PATH = "client_accounts.dat";
 
-    public ClientAccountRepository() {
-        this.clientAccounts = loadAccountsFromFile();
+    private ClientAccountRepository() {
+        this.clientAccounts = loadAccounts();
     }
 
     public static ClientAccountRepository getInstance() {
@@ -26,26 +22,27 @@ public class ClientAccountRepository {
         return instance;
     }
 
-    @SuppressWarnings("unchecked")
-    private List<ClientAccount> loadAccountsFromFile() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
-            return (List<ClientAccount>) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            return new ArrayList<>();
-        }
+    public boolean isValidAccountNumber(String accountNumber) {
+        return accountNumber != null && accountNumber.matches("\\d+");
     }
 
-    public void save(ClientAccount account) {
-        clientAccounts.add(account);
-        saveAccountsToFile();
+    public OperationResult save(ClientAccount account) {
+        if(!isValidAccountNumber(account.getAccountNumber())){
+            return OperationResult.INVALID_ACCOUNT_NUMBER;
+        }
+        return save(clientAccounts, account, FILE_PATH);
     }
 
-    private void saveAccountsToFile() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
-            oos.writeObject(clientAccounts);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to save accounts to file", e);
-        }
+    public OperationResult save() {
+        return save(clientAccounts, FILE_PATH);
+    }
+
+    public ClientAccount findById(String id) {
+        return findById(clientAccounts, id);
+    }
+    
+    public ClientAccount findByUsername(String username) {
+        return findByUsername(clientAccounts, username);
     }
 
     public ClientAccount findByAccountNumber(String accountNumber) {
@@ -54,27 +51,12 @@ public class ClientAccountRepository {
                 .findFirst()
                 .orElse(null);
     }
-
-    public ClientAccount findByUsername(String username) {
-        return clientAccounts.stream()
-                .filter(account -> account.getUsername().equals(username))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public ClientAccount findById(String id) {
-        return clientAccounts.stream()
-                .filter(account -> account.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
-
+    
     public List<ClientAccount> findAll() {
-        return new ArrayList<>(clientAccounts);
+        return findAll(clientAccounts);
     }
 
-    public boolean existsByAccountNumber(String accountNumber) {
-        return clientAccounts.stream()
-                .anyMatch(account -> account.getAccountNumber().equals(accountNumber));
+    private List<ClientAccount> loadAccounts() {
+        return loadAccountsFromFile(FILE_PATH);
     }
 }

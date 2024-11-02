@@ -14,8 +14,8 @@ public class AdminService {
     private final ClientAccountRepository clientRepository;
 
     public AdminService() {
-        this.adminRepository = new AdminAccountRepository();
-        this.clientRepository = new ClientAccountRepository();
+        this.adminRepository = AdminAccountRepository.getInstance();
+        this.clientRepository = ClientAccountRepository.getInstance();
     }
     /* CREATE DATA */
     public void createClientAccount(String username, String firstName, String lastName, String password, String accountNumber) {
@@ -96,4 +96,13 @@ public class AdminService {
         }
     }
 
+    public boolean setTransactionLimit(String accountNumber, double limit) {
+        if (limit <= 0) {
+            return false;
+        }
+        ClientAccount account = clientRepository.findByAccountNumber(accountNumber);
+        account.setTransactionLimit(limit);
+        clientRepository.save(account);
+        return true;
+    }
 }

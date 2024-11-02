@@ -36,4 +36,8 @@ public class AdminController {
     public boolean updateClientNames(String accountNumber, String newFirstName, String newLastName) {
         return adminService.updateNames(accountNumber, newFirstName, newLastName, AccountType.CLIENT);
     }
+        
+    public boolean setTransactionLimit(String accountNumber, double limit) {
+        return adminService.setTransactionLimit(accountNumber, limit);
+    }
 }

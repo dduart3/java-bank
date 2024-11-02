@@ -1,27 +1,31 @@
 package com.bank;
 
-import com.bank.controller.BankController;
-import com.bank.view.LoginGUI;
 import javax.swing.SwingUtilities;
 
+import com.bank.model.AdminAccount;
+import com.bank.model.ClientAccount;
+import com.bank.repository.AdminAccountRepository;
+import com.bank.repository.ClientAccountRepository;
 
 public final class App {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            BankController controller = new BankController();
-            controller.loadData(); // Load existing data
-            
+            AdminAccountRepository adminRepository = AdminAccountRepository.getInstance();
+            ClientAccountRepository clientRepository = ClientAccountRepository.getInstance();
+
             // Create some sample accounts for testing
-            controller.createClientAccount("C001", "John Doe", "password1");
-            controller.createAdminAccount("A001", "Admin User", "adminpass");
+            clientRepository.save(new ClientAccount("admin", "1234", "David", "Duarte", "1234"));
+            adminRepository.save(new AdminAccount("cliente", "1234", "David", "Duarte"));
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                controller.saveData(); // Save data when the application closes
+                // Save data when the application closes
+                clientRepository.save();
+                adminRepository.save();
             }));
-            
-            LoginGUI loginGUI = new LoginGUI(controller);
-            loginGUI.setVisible(true);
+
+            //LoginGUI loginGUI = new LoginGUI(controller);
+            //loginGUI.setVisible(true);
         });
     }
 }
