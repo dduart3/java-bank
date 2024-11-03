@@ -12,38 +12,45 @@ import javax.swing.JPanel;
 import com.bank.controller.ClientController;
 
 public class AccountOverviewPanel extends JPanel {
+
     private final ClientController controller;
-    private final String username;
     private final String accountNumber;
 
-    public AccountOverviewPanel(String username) {
+    public AccountOverviewPanel(String accountNumber) {
         this.controller = new ClientController();
-        this.username = username;
-        this.accountNumber = controller.getAccountNumber(username);
-        
+        this.accountNumber = accountNumber;
+
         setLayout(new GridBagLayout());
         setBackground(new Color(33, 33, 33));
-        
+
         initializeComponents();
     }
 
     private void initializeComponents() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
-        
+
         // Balance display
         JLabel balanceLabel = new JLabel("Current Balance: $" + controller.getAccountBalance(accountNumber));
         balanceLabel.setFont(new Font("Arial", Font.BOLD, 24));
         balanceLabel.setForeground(Color.WHITE);
-        
+
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(balanceLabel, gbc);
-        
-        // Recent transactions
-        JLabel recentTransLabel = new JLabel("Recent Transactions");
-        recentTransLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+        // Last Transaction Info
+        String lastTransaction = controller.getLastTransaction(accountNumber);
+        JLabel lastTransLabel = new JLabel("Last Transaction");
+        lastTransLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        lastTransLabel.setForeground(Color.WHITE);
         gbc.gridy = 1;
-        add(recentTransLabel, gbc);
+        add(lastTransLabel, gbc);
+
+        JLabel transactionDetails = new JLabel(lastTransaction);
+        transactionDetails.setFont(new Font("Arial", Font.PLAIN, 14));
+        transactionDetails.setForeground(Color.WHITE);
+        gbc.gridy = 2;
+        add(transactionDetails, gbc);
     }
 }

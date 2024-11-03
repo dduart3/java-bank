@@ -13,13 +13,13 @@ import javax.swing.table.DefaultTableModel;
 import com.bank.controller.ClientController;
 
 public class TransactionHistoryPanel extends JPanel {
-    private final ClientController controller;
-    private final String username;
+    private final ClientController clientController;
+    private final String accountNumber;
     private JTable transactionTable;
 
-    public TransactionHistoryPanel(String username) {
-        this.username = username;
-        this.controller = new ClientController();
+    public TransactionHistoryPanel(String accountNumber) {
+        this.accountNumber = accountNumber;
+        this.clientController = new ClientController();
         
         setLayout(new BorderLayout());
         setBackground(new Color(33, 33, 33));

@@ -12,16 +12,19 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.bank.controller.ClientController;
+import com.bank.view.ClientGUI;
 
 public class TransferPanel extends JPanel {
-    private final ClientController controller;
-    private final String username;
+    private final ClientController clientController;
+    private final ClientGUI clientGUI;
+    private final String accountNumber;
     private final JTextField recipientField;
     private final JTextField amountField;
 
-    public TransferPanel(String username) {
-        this.username = username;
-        this.controller = new ClientController();
+    public TransferPanel(ClientGUI clientGUI, String accountNumber) {
+        this.clientController = new ClientController();
+        this.clientGUI = clientGUI;
+        this.accountNumber = accountNumber;
         
         setLayout(new GridBagLayout());
         setBackground(new Color(33, 33, 33));
@@ -61,10 +64,19 @@ public class TransferPanel extends JPanel {
         String recipient = recipientField.getText();
         try {
             double amount = Double.parseDouble(amountField.getText());
-            // Call controller method for transfer
-            // Show success/error message
+            boolean success = clientController.transfer(accountNumber, recipient, amount);
+            showResult(success);
+            clientGUI.refreshAccountOverview();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Please enter a valid amount");
+        }
+    }
+
+    private void showResult(boolean success) {
+        String message = success ? "Transfer successful!" : "Transfer failed. Please try again.";
+        JOptionPane.showMessageDialog(this, message);
+        if (success) {
+            amountField.setText("");
         }
     }
 }
