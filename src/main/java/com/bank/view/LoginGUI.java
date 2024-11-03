@@ -143,7 +143,7 @@ public class LoginGUI extends JFrame {
                 new ClientGUI(username).setVisible(true);
                 break;
             default:
-                new ClientGUI(username).setVisible(true);
+                //new ClientGUI(username).setVisible(true);
                 break;
         }
     }

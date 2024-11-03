@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -18,45 +19,65 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.w3c.dom.events.MouseEvent;
-
 import com.bank.controller.ClientController;
+import com.bank.view.panels.client.AccountOverviewPanel;
+import com.bank.view.panels.client.SettingsPanel;
+import com.bank.view.panels.client.TransactionHistoryPanel;
+import com.bank.view.panels.client.TransferPanel;
 import com.formdev.flatlaf.FlatDarkLaf;
 
 public class ClientGUI extends JFrame {
+
     static {
         FlatDarkLaf.setup();
     }
 
     private final String username;
     private final ClientController clientController;
+    private JPanel contentPanel;  // Add this field
+    private JButton selectedButton;
 
     public ClientGUI(String username) {
         this.username = username;
         this.clientController = new ClientController();
-        
+        this.contentPanel = new JPanel(new CardLayout());
+
+
         setTitle("Client Dashboard - " + username);
         setSize(800, 600);
         setLocationRelativeTo(null);
+        setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel mainPanel = createGradientPanel();
         mainPanel.setLayout(new BorderLayout());
 
+        initializePanels();
+        
         JPanel navPanel = createNavPanel();
         mainPanel.add(navPanel, BorderLayout.WEST);
-
-        JPanel contentPanel = new JPanel(new CardLayout());
         mainPanel.add(contentPanel, BorderLayout.CENTER);
 
         add(mainPanel);
     }
+
+    private void initializePanels() {
+        contentPanel.add(new AccountOverviewPanel(username), "Account Overview");
+        contentPanel.add(new TransferPanel(username), "Transfer Money");
+        contentPanel.add(new TransactionHistoryPanel(username), "Transaction History");
+        contentPanel.add(new SettingsPanel(username), "Settings");
+    }
+
+    
 
     private JPanel createNavPanel() {
         JPanel navPanel = new JPanel();
         navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.Y_AXIS));
         navPanel.setBackground(new Color(24, 24, 24));
         navPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        navPanel.setPreferredSize(new Dimension(250, getHeight()));
+        navPanel.setMinimumSize(new Dimension(250, getHeight()));
 
         String[] options = {
             "Account Overview",
@@ -82,8 +103,8 @@ public class ClientGUI extends JFrame {
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
                 int w = getWidth(), h = getHeight();
-                GradientPaint gp = new GradientPaint(0, 0, new Color(33, 33, 33), 
-                    w, h, new Color(18, 18, 18));
+                GradientPaint gp = new GradientPaint(0, 0, new Color(33, 33, 33),
+                        w, h, new Color(18, 18, 18));
                 g2d.setPaint(gp);
                 g2d.fillRect(0, 0, w, h);
             }
@@ -100,14 +121,43 @@ public class ClientGUI extends JFrame {
         button.setBorderPainted(false);
 
         button.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent e) {
                 button.setBackground(new Color(60, 60, 60));
             }
+
+            @Override
             public void mouseExited(MouseEvent e) {
                 button.setBackground(new Color(45, 45, 45));
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (text.equals("Logout")) {
+                    handleLogout();
+                } else {
+                    updateButtonStyles(button);
+                    CardLayout cl = (CardLayout) contentPanel.getLayout();
+                    cl.show(contentPanel, text);
+                }
             }
         });
 
         return button;
+    }
+
+    private void updateButtonStyles(JButton clickedButton) {
+        if (selectedButton != null) {
+            selectedButton.setBackground(new Color(45, 45, 45));
+            selectedButton.setBorder(null);
+        }
+        
+        selectedButton = clickedButton;
+        clickedButton.setBackground(new Color(60, 60, 60));
+        clickedButton.setBorder(BorderFactory.createMatteBorder(0, 3, 0, 0, new Color(0, 150, 136)));
+    }
+
+    private void handleLogout() {
+        new MainLoginGUI().setVisible(true);
+        this.dispose();
     }
 }

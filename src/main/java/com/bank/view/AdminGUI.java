@@ -1,4 +1,3 @@
-
 package com.bank.view;
 
 import java.awt.BorderLayout;
@@ -21,39 +20,47 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import com.bank.controller.AdminController;
+import com.bank.view.panels.admin.AccountManagementPanel;
+import com.bank.view.panels.admin.AdminDashboardPanel;
+import com.bank.view.panels.admin.ReportsPanel;
+import com.bank.view.panels.admin.SystemSettingsPanel;
 import com.formdev.flatlaf.FlatDarkLaf;
 
 public class AdminGUI extends JFrame {
+
     static {
         FlatDarkLaf.setup();
     }
 
     private final String username;
     private final AdminController adminController;
+    private JPanel contentPanel;  // Add this field
+    private JButton selectedButton;
+
 
     public AdminGUI(String username) {
         this.username = username;
         this.adminController = new AdminController();
-        
+        this.contentPanel = new JPanel(new CardLayout());
+
         setTitle("Admin Dashboard - " + username);
         setSize(800, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Create main panel with gradient background
         JPanel mainPanel = createGradientPanel();
         mainPanel.setLayout(new BorderLayout());
 
-        // Add navigation panel
+        initializePanels();
+        
         JPanel navPanel = createNavPanel();
         mainPanel.add(navPanel, BorderLayout.WEST);
-
-        // Add content panel
-        JPanel contentPanel = new JPanel(new CardLayout());
         mainPanel.add(contentPanel, BorderLayout.CENTER);
 
         add(mainPanel);
+        
     }
+
 
     private JPanel createGradientPanel() {
         return new JPanel() {
@@ -62,8 +69,8 @@ public class AdminGUI extends JFrame {
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
                 int w = getWidth(), h = getHeight();
-                GradientPaint gp = new GradientPaint(0, 0, new Color(33, 33, 33), 
-                    w, h, new Color(18, 18, 18));
+                GradientPaint gp = new GradientPaint(0, 0, new Color(33, 33, 33),
+                        w, h, new Color(18, 18, 18));
                 g2d.setPaint(gp);
                 g2d.fillRect(0, 0, w, h);
             }
@@ -75,6 +82,9 @@ public class AdminGUI extends JFrame {
         navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.Y_AXIS));
         navPanel.setBackground(new Color(24, 24, 24));
         navPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        navPanel.setPreferredSize(new Dimension(250, getHeight()));
+        navPanel.setMinimumSize(new Dimension(250, getHeight()));
 
         String[] options = {
             "Dashboard",
@@ -96,21 +106,57 @@ public class AdminGUI extends JFrame {
     private JButton createNavButton(String text) {
         JButton button = new JButton(text);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.setMaximumSize(new Dimension(200, 40));
+        button.setMaximumSize(new Dimension(250, 40)); 
         button.setBackground(new Color(45, 45, 45));
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorderPainted(false);
 
         button.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent e) {
                 button.setBackground(new Color(60, 60, 60));
             }
+
+            @Override
             public void mouseExited(MouseEvent e) {
                 button.setBackground(new Color(45, 45, 45));
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (text.equals("Logout")) {
+                    handleLogout();
+                } else {
+                    updateButtonStyles(button);
+                    CardLayout cl = (CardLayout) contentPanel.getLayout();
+                    cl.show(contentPanel, text);
+                }
             }
         });
 
         return button;
+    }
+
+    private void updateButtonStyles(JButton clickedButton) {
+        if (selectedButton != null) {
+            selectedButton.setBackground(new Color(45, 45, 45));
+            selectedButton.setBorder(null);
+        }
+        
+        selectedButton = clickedButton;
+        clickedButton.setBackground(new Color(60, 60, 60));
+        clickedButton.setBorder(BorderFactory.createMatteBorder(0, 3, 0, 0, new Color(0, 150, 136)));
+    }
+
+    private void initializePanels() {
+        contentPanel.add(new AdminDashboardPanel(username), "Dashboard");
+        contentPanel.add(new AccountManagementPanel(), "Manage Accounts");
+        contentPanel.add(new ReportsPanel(), "View Reports");
+        contentPanel.add(new SystemSettingsPanel(), "System Settings");
+    }
+
+    private void handleLogout() {
+        new MainLoginGUI().setVisible(true);
+        this.dispose();
     }
 }

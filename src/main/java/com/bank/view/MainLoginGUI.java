@@ -135,7 +135,7 @@ private JButton createStyledButton(String text, Color color, AccountType account
                         openClientLogin();
                         break;
                     default:
-                        openClientLogin();
+                    System.out.println("Invalid account type");
                         break;
                 }
             }
