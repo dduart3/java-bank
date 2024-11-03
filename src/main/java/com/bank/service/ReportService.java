@@ -35,7 +35,6 @@ public class ReportService {
             report.append("\nAccount Number: ").append(account.getAccountNumber())
                  .append("\nOwner: ").append(account.getOwnerFullName())
                  .append("\nBalance: $").append(account.getBalance())
-                 .append("\nTransaction Limit: $").append(account.getTransactionLimit())
                  .append("\n-------------------");
         }
         return report.toString();

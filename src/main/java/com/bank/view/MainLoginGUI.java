@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -135,7 +136,7 @@ private JButton createStyledButton(String text, Color color, AccountType account
                         openClientLogin();
                         break;
                     default:
-                    System.out.println("Invalid account type");
+                    JOptionPane.showMessageDialog(null, "Invalid account type");
                         break;
                 }
             }

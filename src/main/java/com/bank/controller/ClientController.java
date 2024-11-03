@@ -17,6 +17,10 @@ public class ClientController {
         return clientService.getAccountBalance(accountNumber);
     }
 
+    public String getLastTransaction(String accountNumber) {
+        return clientService.getLastTransaction(accountNumber);
+    }
+
     public boolean transfer(String fromAccount, String toAccount, double amount) {
         return clientService.transfer(fromAccount, toAccount, amount);
     }

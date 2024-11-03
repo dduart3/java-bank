@@ -23,14 +23,6 @@ public class ClientAccount extends Account {
         return accountNumber;
     }
 
-    public void setTransactionLimit(double limit) {
-        this.transactionLimit = limit;
-    }
-
-    public double getTransactionLimit() {
-        return transactionLimit;
-    }
-
     public double getBalance() {
         return balance;
     }
@@ -62,5 +54,4 @@ public class ClientAccount extends Account {
         }
         return false;
     }
-
 }

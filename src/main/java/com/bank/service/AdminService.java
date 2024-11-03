@@ -96,13 +96,5 @@ public class AdminService {
         }
     }
 
-    public boolean setTransactionLimit(String accountNumber, double limit) {
-        if (limit <= 0) {
-            return false;
-        }
-        ClientAccount account = clientRepository.findByAccountNumber(accountNumber);
-        account.setTransactionLimit(limit);
-        clientRepository.save(account);
-        return true;
-    }
+
 }

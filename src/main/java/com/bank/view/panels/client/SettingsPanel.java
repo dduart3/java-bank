@@ -17,9 +17,9 @@ import com.bank.controller.ClientController;
 public class SettingsPanel extends JPanel {
     private final ClientController controller;
     private final String username;
-    private final JPasswordField currentPasswordField;
-    private final JPasswordField newPasswordField;
-    private final JPasswordField confirmPasswordField;
+    private JPasswordField currentPasswordField;
+    private JPasswordField newPasswordField;
+    private JPasswordField confirmPasswordField;
 
     public SettingsPanel(String username) {
         this.username = username;
@@ -28,61 +28,90 @@ public class SettingsPanel extends JPanel {
         setLayout(new GridBagLayout());
         setBackground(new Color(33, 33, 33));
         
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        
-        // Password change section
-        JLabel passwordLabel = new JLabel("Change Password");
-        passwordLabel.setForeground(Color.WHITE);
-        passwordLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        
-        currentPasswordField = new JPasswordField(20);
-        newPasswordField = new JPasswordField(20);
-        confirmPasswordField = new JPasswordField(20);
-        
-        JButton changePasswordButton = new JButton("Update Password");
-        changePasswordButton.addActionListener(e -> handlePasswordChange());
-        
-        // Layout components
-        JLabel currentPasswordLabel = new JLabel("Current Password:");
-        JLabel newPasswordLabel = new JLabel("New Password:");
-        JLabel confirmPasswordLabel = new JLabel("Confirm New Password:");
-
-        currentPasswordLabel.setForeground(Color.WHITE);
-        newPasswordLabel.setForeground(Color.WHITE);
-        confirmPasswordLabel.setForeground(Color.WHITE);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        add(currentPasswordLabel, gbc);
-        gbc.gridy = 2;
-        add(currentPasswordField, gbc);
-        gbc.gridy = 3;
-        add(newPasswordLabel, gbc);
-        gbc.gridy = 4;
-        add(newPasswordField, gbc);
-        gbc.gridy = 5;
-        add(confirmPasswordLabel, gbc);
-        gbc.gridy = 6;
-        add(confirmPasswordField, gbc);
-        gbc.gridy = 7;
-        add(changePasswordButton, gbc);
+        createPasswordChangeSection();
     }
 
-  
-    
+    private void createPasswordChangeSection() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        JLabel titleLabel = new JLabel("Change Password");
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        add(titleLabel, gbc);
+
+        // Current Password
+        JLabel currentLabel = new JLabel("Current Password:");
+        currentLabel.setForeground(Color.WHITE);
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        add(currentLabel, gbc);
+
+        currentPasswordField = new JPasswordField(20);
+        gbc.gridx = 1;
+        add(currentPasswordField, gbc);
+
+        // New Password
+        JLabel newLabel = new JLabel("New Password:");
+        newLabel.setForeground(Color.WHITE);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        add(newLabel, gbc);
+
+        newPasswordField = new JPasswordField(20);
+        gbc.gridx = 1;
+        add(newPasswordField, gbc);
+
+        // Confirm Password
+        JLabel confirmLabel = new JLabel("Confirm Password:");
+        confirmLabel.setForeground(Color.WHITE);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        add(confirmLabel, gbc);
+
+        confirmPasswordField = new JPasswordField(20);
+        gbc.gridx = 1;
+        add(confirmPasswordField, gbc);
+
+        // Change Button
+        JButton changeButton = new JButton("Change Password");
+        changeButton.setBackground(new Color(45, 45, 45));
+        changeButton.setForeground(Color.WHITE);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.NONE;
+        add(changeButton, gbc);
+
+        changeButton.addActionListener(e -> handlePasswordChange());
+    }
 
     private void handlePasswordChange() {
         String currentPassword = new String(currentPasswordField.getPassword());
         String newPassword = new String(newPasswordField.getPassword());
         String confirmPassword = new String(confirmPasswordField.getPassword());
-        
-        if (!newPassword.equals(confirmPassword)) {
-            JOptionPane.showMessageDialog(this, "New passwords don't match");
-            return;
+
+        if (newPassword.equals(confirmPassword)) {
+            if (controller.updatePassword(username, currentPassword, newPassword)) {
+                JOptionPane.showMessageDialog(this, "Password updated successfully!");
+                clearFields();
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to update password. Please check your current password.", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "New passwords don't match!", 
+                "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
-        // Call controller method to change password
+    }
+
+    private void clearFields() {
+        currentPasswordField.setText("");
+        newPasswordField.setText("");
+        confirmPasswordField.setText("");
     }
 }

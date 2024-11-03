@@ -15,7 +15,7 @@ import com.bank.controller.ClientController;
 import com.bank.view.ClientGUI;
 
 public class WithdrawPanel extends JPanel {
-    private final ClientController controller;
+    private final ClientController clientController;
     private final ClientGUI clientGUI;
     private final String accountNumber;
     private final JTextField amountField;
@@ -23,7 +23,7 @@ public class WithdrawPanel extends JPanel {
     public WithdrawPanel(ClientGUI clientGUI, String accountNumber) {
         this.clientGUI = clientGUI;
         this.accountNumber = accountNumber;
-        this.controller = new ClientController();
+        this.clientController = new ClientController();
         this.amountField = new JTextField(20);
         
         setLayout(new GridBagLayout());
@@ -54,9 +54,10 @@ public class WithdrawPanel extends JPanel {
     private void handleWithdraw() {
         try {
             double amount = Double.parseDouble(amountField.getText());
-            boolean success = controller.withdraw(accountNumber, amount);
+            boolean success = clientController.withdraw(accountNumber, amount);
             showResult(success);
             clientGUI.refreshAccountOverview();
+            clientGUI.refreshTransactionHistory();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Please enter a valid amount");
         }

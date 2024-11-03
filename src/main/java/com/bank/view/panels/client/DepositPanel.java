@@ -60,6 +60,7 @@ public class DepositPanel extends JPanel {
             boolean success = clientController.deposit(accountNumber, amount);
             showResult(success);
             clientGUI.refreshAccountOverview();
+            clientGUI.refreshTransactionHistory();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Please enter a valid amount");
         }

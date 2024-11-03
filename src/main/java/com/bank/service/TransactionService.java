@@ -59,7 +59,7 @@ public class TransactionService {
             return false;
         }
 
-        if (sender.getBalance() < amount || amount > sender.getTransactionLimit()) {
+        if (sender.getBalance() < amount) {
             return false;
         }
 
@@ -101,9 +101,12 @@ public class TransactionService {
     public boolean executeWithdraw(String accountNumber, double amount) {
         ClientAccount account = clientRepository.findByAccountNumber(accountNumber);
 
-        if (account == null || amount <= 0 || account.isFrozen() || amount > account.getTransactionLimit()) {
+
+        if (account == null || amount <= 0 || account.isFrozen() || amount > account.getBalance()) {
             return false;
         }
+
+        System.out.println("Account balance before withdrawal: " + account.getBalance());
 
         account.withdraw(amount);
 

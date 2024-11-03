@@ -21,9 +21,11 @@ import javax.swing.JPanel;
 
 import com.bank.controller.ClientController;
 import com.bank.view.panels.client.AccountOverviewPanel;
+import com.bank.view.panels.client.DepositPanel;
 import com.bank.view.panels.client.SettingsPanel;
 import com.bank.view.panels.client.TransactionHistoryPanel;
 import com.bank.view.panels.client.TransferPanel;
+import com.bank.view.panels.client.WithdrawPanel;
 import com.formdev.flatlaf.FlatDarkLaf;
 
 public class ClientGUI extends JFrame {
@@ -33,13 +35,17 @@ public class ClientGUI extends JFrame {
     }
 
     private final String username;
+    private final String accountNumber;
     private final ClientController clientController;
     private JPanel contentPanel;  // Add this field
     private JButton selectedButton;
+    
+
 
     public ClientGUI(String username) {
         this.username = username;
         this.clientController = new ClientController();
+        this.accountNumber = clientController.getAccountNumber(username);
         this.contentPanel = new JPanel(new CardLayout());
 
 
@@ -62,13 +68,29 @@ public class ClientGUI extends JFrame {
     }
 
     private void initializePanels() {
-        contentPanel.add(new AccountOverviewPanel(username), "Account Overview");
-        contentPanel.add(new TransferPanel(username), "Transfer Money");
-        contentPanel.add(new TransactionHistoryPanel(username), "Transaction History");
+        contentPanel.add(new AccountOverviewPanel(accountNumber), "Account Overview");
+        contentPanel.add(new TransferPanel(this, accountNumber), "Transfer Money");
+        contentPanel.add(new DepositPanel(this, accountNumber), "Deposit");
+        contentPanel.add(new WithdrawPanel(this, accountNumber), "Withdraw");
+        contentPanel.add(new TransactionHistoryPanel(accountNumber), "Transaction History");
         contentPanel.add(new SettingsPanel(username), "Settings");
     }
 
-    
+    public void refreshAccountOverview() {
+        CardLayout cl = (CardLayout) contentPanel.getLayout();
+        // Recreate the account overview panel with fresh data
+        contentPanel.remove(0);
+        
+        contentPanel.add(new AccountOverviewPanel(accountNumber), "Account Overview");
+        // Show the updated panel
+        cl.show(contentPanel, "Account Overview");
+    }
+
+    public void refreshTransactionHistory() {
+        // Recreate the transaction history panel with fresh data
+        contentPanel.remove(3);
+        contentPanel.add(new TransactionHistoryPanel(accountNumber), "Transaction History");
+    }
 
     private JPanel createNavPanel() {
         JPanel navPanel = new JPanel();
@@ -82,6 +104,8 @@ public class ClientGUI extends JFrame {
         String[] options = {
             "Account Overview",
             "Transfer Money",
+            "Deposit",
+            "Withdraw",
             "Transaction History",
             "Settings",
             "Logout"
@@ -155,6 +179,8 @@ public class ClientGUI extends JFrame {
         clickedButton.setBackground(new Color(60, 60, 60));
         clickedButton.setBorder(BorderFactory.createMatteBorder(0, 3, 0, 0, new Color(0, 150, 136)));
     }
+
+
 
     private void handleLogout() {
         new MainLoginGUI().setVisible(true);
