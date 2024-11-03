@@ -14,10 +14,12 @@ import com.bank.controller.ClientController;
 public class AccountOverviewPanel extends JPanel {
     private final ClientController controller;
     private final String username;
+    private final String accountNumber;
 
     public AccountOverviewPanel(String username) {
-        this.username = username;
         this.controller = new ClientController();
+        this.username = username;
+        this.accountNumber = controller.getAccountNumber(username);
         
         setLayout(new GridBagLayout());
         setBackground(new Color(33, 33, 33));
@@ -30,7 +32,7 @@ public class AccountOverviewPanel extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10);
         
         // Balance display
-        JLabel balanceLabel = new JLabel("Current Balance: $" + controller.getAccountBalance(username));
+        JLabel balanceLabel = new JLabel("Current Balance: $" + controller.getAccountBalance(accountNumber));
         balanceLabel.setFont(new Font("Arial", Font.BOLD, 24));
         balanceLabel.setForeground(Color.WHITE);
         

@@ -7,7 +7,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -46,17 +45,33 @@ public class SettingsPanel extends JPanel {
         changePasswordButton.addActionListener(e -> handlePasswordChange());
         
         // Layout components
-        addComponents(gbc, passwordLabel, currentPasswordField, 
-                     newPasswordField, confirmPasswordField, changePasswordButton);
+        JLabel currentPasswordLabel = new JLabel("Current Password:");
+        JLabel newPasswordLabel = new JLabel("New Password:");
+        JLabel confirmPasswordLabel = new JLabel("Confirm New Password:");
+
+        currentPasswordLabel.setForeground(Color.WHITE);
+        newPasswordLabel.setForeground(Color.WHITE);
+        confirmPasswordLabel.setForeground(Color.WHITE);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        add(currentPasswordLabel, gbc);
+        gbc.gridy = 2;
+        add(currentPasswordField, gbc);
+        gbc.gridy = 3;
+        add(newPasswordLabel, gbc);
+        gbc.gridy = 4;
+        add(newPasswordField, gbc);
+        gbc.gridy = 5;
+        add(confirmPasswordLabel, gbc);
+        gbc.gridy = 6;
+        add(confirmPasswordField, gbc);
+        gbc.gridy = 7;
+        add(changePasswordButton, gbc);
     }
 
-    private void addComponents(GridBagConstraints gbc, JComponent... components) {
-        int gridy = 0;
-        for (JComponent component : components) {
-            gbc.gridy = gridy++;
-            add(component, gbc);
-        }
-    }
+  
+    
 
     private void handlePasswordChange() {
         String currentPassword = new String(currentPasswordField.getPassword());
