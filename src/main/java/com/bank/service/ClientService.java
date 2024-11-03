@@ -12,6 +12,11 @@ public class ClientService {
         this.clientRepository = ClientAccountRepository.getInstance();
     }
 
+    public String getAccountNumber(String username) {  
+        ClientAccount account = clientRepository.findByUsername(username);
+        return account.getAccountNumber();
+    }
+
      public double getAccountBalance(String accountNumber) {
         ClientAccount account = clientRepository.findByAccountNumber(accountNumber);
         return account.getBalance();

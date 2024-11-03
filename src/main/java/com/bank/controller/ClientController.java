@@ -9,6 +9,10 @@ public class ClientController {
         this.clientService = new ClientService();
     }
 
+    public String getAccountNumber(String username) {
+        return clientService.getAccountNumber(username);
+    }
+
     public double getAccountBalance(String accountNumber) {
         return clientService.getAccountBalance(accountNumber);
     }
