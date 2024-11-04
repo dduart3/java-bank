@@ -11,7 +11,9 @@ import java.util.List;
 import com.bank.model.Account;
 import com.bank.model.OperationResult;
 
-public abstract class IAccountRepository<T extends Account> {
+public abstract class AccountRepository<T extends Account> {
+
+    static public final int MAX_ACCOUNTS = 100000;
 
     public boolean isValidAccount(T account) {
         return account != null
@@ -24,7 +26,7 @@ public abstract class IAccountRepository<T extends Account> {
     public boolean isUsernameTaken(List<T> accounts, String username) {
         return accounts.stream()
                 .anyMatch(existingAccount
-                        -> existingAccount.getUsername().equals(username));
+                        -> existingAccount.getUsername().equalsIgnoreCase(username));
     }
 
     protected OperationResult save(List<T> accounts, T account, String FILE_PATH) {
@@ -62,7 +64,7 @@ public abstract class IAccountRepository<T extends Account> {
 
     protected T findByUsername(List<T> accounts, String username) {
         return accounts.stream()
-                .filter(account -> account.getUsername().equals(username))
+                .filter(account -> account.getUsername().equalsIgnoreCase(username))
                 .findFirst()
                 .orElse(null);
     }

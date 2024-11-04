@@ -13,6 +13,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import com.bank.controller.AdminController;
+import com.bank.model.OperationResult;
 
 public class CreateAccountDialog extends JDialog {
     private final AdminController adminController;
@@ -20,14 +21,18 @@ public class CreateAccountDialog extends JDialog {
     private JTextField firstNameField;
     private JTextField lastNameField;
     private JPasswordField passwordField;
+    private final AdminDashboardPanel dashboardPanel;
+    private final ClientManagementPanel clientPanel;
 
-    public CreateAccountDialog(JFrame parent) {
-        super(parent, "Create New Account", true);
+    public CreateAccountDialog(JFrame owner, AdminDashboardPanel dashboardPanel, ClientManagementPanel clientPanel) {
+        super(owner, "Create New Account", true);
         this.adminController = new AdminController();
+        this.dashboardPanel = dashboardPanel;
+        this.clientPanel = clientPanel;
         
         setLayout(new GridBagLayout());
         setSize(400, 300);
-        setLocationRelativeTo(parent);
+        setLocationRelativeTo(owner);
         
         createForm();
     }
@@ -39,6 +44,9 @@ public class CreateAccountDialog extends JDialog {
         
         // Username
         addFormField("Username:", usernameField = new JTextField(20), gbc, 0);
+
+        // Password
+        addFormField("Password:", passwordField = new JPasswordField(20), gbc, 3);
         
         // First Name
         addFormField("First Name:", firstNameField = new JTextField(20), gbc, 1);
@@ -46,8 +54,6 @@ public class CreateAccountDialog extends JDialog {
         // Last Name
         addFormField("Last Name:", lastNameField = new JTextField(20), gbc, 2);
         
-        // Password
-        addFormField("Password:", passwordField = new JPasswordField(20), gbc, 3);
         
         // Create Button
         JButton createButton = new JButton("Create Account");
@@ -70,30 +76,20 @@ public class CreateAccountDialog extends JDialog {
 
     private void createAccount() {
         String username = usernameField.getText();
+        String password = new String(passwordField.getPassword());
         String firstName = firstNameField.getText();
         String lastName = lastNameField.getText();
-        String password = new String(passwordField.getPassword());
+       
 
-        
-        if (validateFields()) {
-            adminController.createClientAccount(username, firstName, lastName, password);
+        OperationResult result = adminController.createClientAccount(username, password , firstName, lastName);
+
+        if(result == OperationResult.SUCCESS) {
+            dashboardPanel.refresh();
+            clientPanel.refresh();
             JOptionPane.showMessageDialog(this, "Account created successfully!");
             dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to create account. " + result.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    private boolean validateFields() {
-        if (usernameField.getText().isEmpty() || 
-            firstNameField.getText().isEmpty() || 
-            lastNameField.getText().isEmpty() || 
-            passwordField.getPassword().length == 0) {
-            
-            JOptionPane.showMessageDialog(this, 
-                "All fields are required!", 
-                "Validation Error", 
-                JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        return true;
     }
 }

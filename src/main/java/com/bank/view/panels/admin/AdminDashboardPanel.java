@@ -25,11 +25,14 @@ public class AdminDashboardPanel extends JPanel {
     private final AdminController adminController;
     private final TransactionController transactionController;
     private final String username;
+    private final ClientManagementPanel clientManagementPanel;
 
-    public AdminDashboardPanel(String username) {
+    public AdminDashboardPanel(String username, ClientManagementPanel clientManagementPanel) {
         this.username = username;
         this.adminController = new AdminController();
         this.transactionController = new TransactionController();
+        this.clientManagementPanel = clientManagementPanel;
+        
 
         setLayout(new GridBagLayout());
         setBackground(new Color(33, 33, 33));
@@ -67,7 +70,8 @@ public class AdminDashboardPanel extends JPanel {
     }
 
     private void showCreateAccountDialog() {
-        CreateAccountDialog dialog = new CreateAccountDialog((JFrame) SwingUtilities.getWindowAncestor(this));
+        JFrame adminGUI = (JFrame) SwingUtilities.getWindowAncestor(this);
+        CreateAccountDialog dialog = new CreateAccountDialog(adminGUI, this, clientManagementPanel);
         dialog.setVisible(true);
     }
 
@@ -126,5 +130,20 @@ public class AdminDashboardPanel extends JPanel {
         gbc.gridy = 0;
         add(statsPanel, gbc);
     }
-    
+
+    public void refresh() {
+        removeAll();
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(15, 15, 15, 15);
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        
+        addStatisticsSection(gbc);
+        addQuickActionsSection(gbc);
+        
+        revalidate();
+        repaint();
+    }
 }

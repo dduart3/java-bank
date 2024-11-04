@@ -10,17 +10,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import com.bank.controller.AdminController;
 import com.bank.controller.ReportController;
 
 public class ReportsPanel extends JPanel {
-
-    private final AdminController adminController;
     private final ReportController reportController;
     private JTextArea reportDisplay;
 
     public ReportsPanel() {
-        this.adminController = new AdminController();
         this.reportController = new ReportController();
 
         setLayout(new BorderLayout());
@@ -54,7 +50,6 @@ public class ReportsPanel extends JPanel {
         reportDisplay.setText(report);
     }
     
-
     private JButton createButton(String text) {
         JButton button = new JButton(text);
         button.setBackground(new Color(45, 45, 45));
@@ -74,18 +69,6 @@ public class ReportsPanel extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    private void generateDailyBalanceReport() {
-        String report = reportController.generateReport("DAILY_BALANCE");
-        reportDisplay.setText(report);
-    }
-
-    private void generateActivityReport() {
-        String report = reportController.generateReport("TRANSACTION_HISTORY");
-        reportDisplay.setText(report);
-    }
-
     public void refresh() {
     }
-
-    
 }

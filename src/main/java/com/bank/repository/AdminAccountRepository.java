@@ -5,14 +5,14 @@ import java.util.List;
 import com.bank.model.AdminAccount;
 import com.bank.model.OperationResult;
 
-public class AdminAccountRepository extends IAccountRepository<AdminAccount> {
+public class AdminAccountRepository extends AccountRepository<AdminAccount> {
 
     private static AdminAccountRepository instance;
-    private final List<AdminAccount> adminAccounts;
+    private final List<AdminAccount> accounts;
     private static final String FILE_PATH = "admin_accounts.dat";
 
     private AdminAccountRepository() {
-        this.adminAccounts = loadAccounts();
+        this.accounts = loadAccounts();
     }
 
     public static AdminAccountRepository getInstance() {
@@ -23,24 +23,24 @@ public class AdminAccountRepository extends IAccountRepository<AdminAccount> {
     }
 
     public OperationResult save(AdminAccount account) {
-        return save(adminAccounts, account, FILE_PATH);
+        return save(accounts, account, FILE_PATH);
     }
 
     public OperationResult save() {
-        return save(adminAccounts, FILE_PATH);
+        return save(accounts, FILE_PATH);
     }
 
     public AdminAccount findById(String id) {
-        return findById(adminAccounts, id);
+        return findById(accounts, id);
     }
 
     
     public AdminAccount findByUsername(String username) {
-        return findByUsername(adminAccounts, username);
+        return findByUsername(accounts, username);
     }
 
     public List<AdminAccount> findAll() {
-        return findAll(adminAccounts);
+        return findAll(accounts);
     }
 
     private List<AdminAccount> loadAccounts() {

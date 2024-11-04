@@ -19,7 +19,6 @@ import javax.swing.JTextField;
 
 import com.bank.controller.AuthController;
 import com.bank.model.AccountType;
-import com.formdev.flatlaf.FlatDarkLaf;
 
 public class LoginGUI extends JFrame {
     private final JTextField usernameField;
@@ -27,10 +26,6 @@ public class LoginGUI extends JFrame {
     private final AccountType accountType;
     private final MainLoginGUI mainLoginGUI;
     private final AuthController authController;
-
-    static {
-        FlatDarkLaf.setup();
-    }
 
     public LoginGUI(AccountType accountType, MainLoginGUI mainLoginGUI) {
         

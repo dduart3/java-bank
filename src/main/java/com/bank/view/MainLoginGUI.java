@@ -21,19 +21,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import com.bank.model.AccountType;
-import com.formdev.flatlaf.FlatDarkLaf;
 
 public class MainLoginGUI extends JFrame {
 
     private final JButton adminLoginButton;
     private final JButton clientLoginButton;
 
-    static {
-        FlatDarkLaf.setup();
-    }
 
     public MainLoginGUI() {
         setTitle("Marabank - Select Login Type");
@@ -89,20 +84,6 @@ public class MainLoginGUI extends JFrame {
              }
          });
  
-         // Add floating effect to buttons
-         Timer timer = new Timer(50, e -> {
-             float offset = 0;
- 
-             offset += 0.1;
-             adminLoginButton.setBorder(BorderFactory.createEmptyBorder(
-                     (int) (Math.sin(offset) * 2) + 5, 0, 5, 0));
-             clientLoginButton.setBorder(BorderFactory.createEmptyBorder(
-                     (int) (Math.sin(offset + Math.PI) * 2) + 5, 0, 5, 0));
-             panel.repaint();
-             panel.revalidate();
-         });
-         timer.start();
-
         add(panel);
 }
 
@@ -113,6 +94,7 @@ private JButton createStyledButton(String text, Color color, AccountType account
         button.setFocusPainted(false);
         button.setFont(new Font("Arial", Font.BOLD, 15));
         button.setForeground(Color.WHITE);
+        button.setBorder(BorderFactory.createEmptyBorder());
 
 
         button.addMouseListener(new MouseAdapter() {

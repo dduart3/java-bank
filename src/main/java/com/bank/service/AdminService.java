@@ -1,11 +1,12 @@
 package com.bank.service;
 
 import java.util.List;
-import java.util.Random;
 
 import com.bank.model.AccountType;
 import com.bank.model.AdminAccount;
 import com.bank.model.ClientAccount;
+import com.bank.model.OperationResult;
+import com.bank.repository.AccountRepository;
 import com.bank.repository.AdminAccountRepository;
 import com.bank.repository.ClientAccountRepository;
 
@@ -13,22 +14,39 @@ public class AdminService {
 
     private final AdminAccountRepository adminRepository;
     private final ClientAccountRepository clientRepository;
+    private final ValidationService validationService;
 
     public AdminService() {
         this.adminRepository = AdminAccountRepository.getInstance();
         this.clientRepository = ClientAccountRepository.getInstance();
+        this.validationService = new ValidationService();
     }
 
     /* CREATE DATA */
-    public void createClientAccount(String username, String firstName, String lastName, String password) {
+    public OperationResult createClientAccount(String username, String password, String firstName, String lastName) {
+        OperationResult inputValidationResult = validationService.validateRegistration(username, password, firstName, lastName);
+
+        if (clientRepository.getAccountCount() >= AccountRepository.MAX_ACCOUNTS) {
+            return OperationResult.ACCOUNT_LIMIT_REACHED;
+        }
+
+        if (inputValidationResult != OperationResult.SUCCESS) {
+            return inputValidationResult;
+        }
+
+        if (clientRepository.findByUsername(username) != null) {
+            return OperationResult.USERNAME_TAKEN;
+        }
+        
         String accountNumber = generateAccountNumber();
-        ClientAccount newAccount = new ClientAccount(username, firstName, lastName, password, accountNumber);
+
+        ClientAccount newAccount = new ClientAccount(username, password, firstName, lastName, accountNumber);
         clientRepository.save(newAccount);
+        return OperationResult.SUCCESS;
     }
 
-    public void createAdminAccount(String username, String firstName, String lastName,
-            String password) {
-        AdminAccount newAccount = new AdminAccount(username, firstName, lastName, password);
+    public void createAdminAccount(String username, String password, String firstName, String lastName) {
+        AdminAccount newAccount = new AdminAccount(username, password, firstName, lastName);
         adminRepository.save(newAccount);
     }
 
@@ -105,21 +123,15 @@ public class AdminService {
         }
         return false;
     }
-    
+
     public boolean isAccountFrozen(String accountNumber) {
         ClientAccount account = clientRepository.findByAccountNumber(accountNumber);
         return account != null && account.isFrozen();
-    }    
+    }
 
     /*Utility Methods*/
     private String generateAccountNumber() {
-        Random random = new Random();
-        String accountNumber = String.format("%04d", random.nextInt(10000));
-        ClientAccount account = clientRepository.findByAccountNumber(accountNumber);
-
-        if (account != null) {
-            return generateAccountNumber(); //Recursive call to generate a new account number
-        }
-        return accountNumber;
+        int totalAccounts = clientRepository.getAccountCount();
+        return String.format("%06d", totalAccounts); // First one is 000000
     }
 }

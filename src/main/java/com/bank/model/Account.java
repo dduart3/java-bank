@@ -16,7 +16,7 @@ public abstract class Account implements Serializable {
     private String lastName;
     private final AccountType accountType;
     
-    public Account(String username, String password, AccountType accountType, String firstName, String lastName) {
+    public Account(String username, String password, String firstName, String lastName, AccountType accountType) {
         this.id = UUID.randomUUID().toString();
         this.creationDate = LocalDateTime.now();
         this.username = username;

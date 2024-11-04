@@ -26,13 +26,9 @@ import com.bank.view.panels.client.SettingsPanel;
 import com.bank.view.panels.client.TransactionHistoryPanel;
 import com.bank.view.panels.client.TransferPanel;
 import com.bank.view.panels.client.WithdrawPanel;
-import com.formdev.flatlaf.FlatDarkLaf;
 
 public class ClientGUI extends JFrame {
 
-    static {
-        FlatDarkLaf.setup();
-    }
 
     private final String username;
     private final String accountNumber;

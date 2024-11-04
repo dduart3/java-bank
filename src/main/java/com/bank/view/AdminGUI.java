@@ -49,10 +49,15 @@ public class AdminGUI extends JFrame {
         contentPanel = new JPanel(new CardLayout());
         contentPanel.setOpaque(false);
         
+        // Create panels
+        ClientManagementPanel clientPanel = new ClientManagementPanel();
+        AdminDashboardPanel dashboardPanel = new AdminDashboardPanel(username, clientPanel);
+        ReportsPanel reportsPanel = new ReportsPanel();
+
         // Add all panels
-        contentPanel.add(new AdminDashboardPanel(username), "Dashboard");
-        contentPanel.add(new ClientManagementPanel(), "Manage Accounts");
-        contentPanel.add(new ReportsPanel(), "View Reports");
+        contentPanel.add(dashboardPanel, "Dashboard");
+        contentPanel.add(clientPanel, "Manage Accounts");
+        contentPanel.add(reportsPanel, "View Reports");
         
         JPanel mainContent = new JPanel(new BorderLayout());
         mainContent.setOpaque(false);

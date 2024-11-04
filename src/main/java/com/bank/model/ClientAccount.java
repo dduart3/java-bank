@@ -6,14 +6,13 @@ import java.util.List;
 public class ClientAccount extends Account {
     private static final long serialVersionUID = 2L;
 
-    private double transactionLimit;
     private final String accountNumber;
     private final List<Transaction> transactions;
     private boolean frozen = false;
     private double balance;
 
-    public ClientAccount(String username, String firstName, String lastName, String password, String accountNumber) {
-        super(username, password, AccountType.CLIENT, firstName, lastName);
+    public ClientAccount(String username,  String password, String firstName, String lastName, String accountNumber) {
+        super(username, password, firstName, lastName, AccountType.CLIENT);
         this.accountNumber = accountNumber;
         this.balance = 0.0;
         this.transactions = new ArrayList<>();

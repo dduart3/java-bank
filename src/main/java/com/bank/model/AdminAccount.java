@@ -9,7 +9,7 @@ public class AdminAccount extends Account {
     private final List<AdminAction> adminActions;
 
     public AdminAccount(String username, String password, String firstName, String lastName ) {
-        super(username,password, AccountType.ADMIN, firstName,lastName);
+        super(username,password, firstName,lastName , AccountType.ADMIN);
         this.adminActions = new ArrayList<>();
     }
 

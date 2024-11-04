@@ -5,14 +5,14 @@ import java.util.List;
 import com.bank.model.ClientAccount;
 import com.bank.model.OperationResult;
 
-public class ClientAccountRepository extends IAccountRepository<ClientAccount> {
+public class ClientAccountRepository extends AccountRepository<ClientAccount> {
 
     private static ClientAccountRepository instance;
-    private final List<ClientAccount> clientAccounts;
+    private final List<ClientAccount> accounts;
     private static final String FILE_PATH = "client_accounts.dat";
 
     private ClientAccountRepository() {
-        this.clientAccounts = loadAccounts();
+        this.accounts = loadAccounts();
     }
 
     public static ClientAccountRepository getInstance() {
@@ -22,35 +22,35 @@ public class ClientAccountRepository extends IAccountRepository<ClientAccount> {
         return instance;
     }
 
-    public boolean isValidAccountNumber(String accountNumber) {
-        return accountNumber != null && accountNumber.matches("\\d+");
-    }
-
     public OperationResult save(ClientAccount account) {
-        return save(clientAccounts, account, FILE_PATH);
+        return save(accounts, account, FILE_PATH);
     }
 
     public OperationResult save() {
-        return save(clientAccounts, FILE_PATH);
+        return save(accounts, FILE_PATH);
     }
 
     public ClientAccount findById(String id) {
-        return findById(clientAccounts, id);
+        return findById(accounts, id);
     }
 
     public ClientAccount findByUsername(String username) {
-        return findByUsername(clientAccounts, username);
+        return findByUsername(accounts, username);
     }
 
     public ClientAccount findByAccountNumber(String accountNumber) {
-        return clientAccounts.stream()
+        return accounts.stream()
                 .filter(account -> account.getAccountNumber().equals(accountNumber))
                 .findFirst()
                 .orElse(null);
     }
     
     public List<ClientAccount> findAll() {
-        return findAll(clientAccounts);
+        return findAll(accounts);
+    }
+
+    public int getAccountCount() {
+        return accounts.size();
     }
 
     private List<ClientAccount> loadAccounts() {
