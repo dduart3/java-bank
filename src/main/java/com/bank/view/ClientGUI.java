@@ -33,7 +33,7 @@ public class ClientGUI extends JFrame {
     private final String username;
     private final String accountNumber;
     private final ClientController clientController;
-    private JPanel contentPanel;  // Add this field
+    private final JPanel contentPanel;
     private JButton selectedButton;
     
     public ClientGUI(String username) {
