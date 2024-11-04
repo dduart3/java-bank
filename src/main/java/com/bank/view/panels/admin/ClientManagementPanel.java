@@ -35,7 +35,7 @@ public class ClientManagementPanel extends JPanel {
     }
 
     private void createTable() {
-        String[] columns = {"Account Number", "Username", "First Name", "Last Name", "Balance"};
+        String[] columns = {"Account Number", "Username", "First Name", "Last Name", "Balance", "Status"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -61,14 +61,19 @@ public class ClientManagementPanel extends JPanel {
 
         JButton updateNamesBtn = createButton("Update Names");
         JButton updatePasswordBtn = createButton("Update Password");
+       
+    JButton freezeAccountBtn = createButton("Toggle Freeze Account");
+    
         JButton viewTransactionsBtn = createButton("View Transactions");
 
         updateNamesBtn.addActionListener(e -> handleUpdateNames());
         updatePasswordBtn.addActionListener(e -> handleUpdatePassword());
+        freezeAccountBtn.addActionListener(e -> handleFreezeAccount());
         viewTransactionsBtn.addActionListener(e -> handleViewTransactions());
 
         controlPanel.add(updateNamesBtn);
         controlPanel.add(updatePasswordBtn);
+        controlPanel.add(freezeAccountBtn);
         controlPanel.add(viewTransactionsBtn);
 
         add(controlPanel, BorderLayout.NORTH);
@@ -122,6 +127,26 @@ public class ClientManagementPanel extends JPanel {
         }
     }
 
+    private void handleFreezeAccount() {
+        int selectedRow = clientTable.getSelectedRow();
+        if (selectedRow != -1) {
+            String accountNumber = (String) tableModel.getValueAt(selectedRow, 0);
+            boolean currentStatus = adminController.isAccountFrozen(accountNumber);
+            
+            if (adminController.toggleFreezeAccount(accountNumber)) {
+                String status = currentStatus ? "unfrozen" : "frozen";
+                JOptionPane.showMessageDialog(this, "Account successfully " + status + "!");
+                refresh(); // Reload the table data
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to update account status!", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a client first!", 
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void handleViewTransactions() {
     int selectedRow = clientTable.getSelectedRow();
     if (selectedRow != -1) {
@@ -150,7 +175,8 @@ public class ClientManagementPanel extends JPanel {
                 client.getUsername(),
                 client.getFirstName(),
                 client.getLastName(),
-                String.format("$%.2f", client.getBalance())
+                String.format("$%.2f", client.getBalance()),
+                client.isFrozen() ? "Frozen" : "Active"
             };
             tableModel.addRow(row);
         }

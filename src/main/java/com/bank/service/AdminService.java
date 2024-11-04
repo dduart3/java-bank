@@ -96,6 +96,21 @@ public class AdminService {
         }
     }
 
+    public boolean toggleFreezeAccount(String accountNumber) {
+        ClientAccount account = clientRepository.findByAccountNumber(accountNumber);
+        if (account != null) {
+            account.setFrozen(!account.isFrozen());
+            clientRepository.save(account);
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean isAccountFrozen(String accountNumber) {
+        ClientAccount account = clientRepository.findByAccountNumber(accountNumber);
+        return account != null && account.isFrozen();
+    }    
+
     /*Utility Methods*/
     private String generateAccountNumber() {
         Random random = new Random();

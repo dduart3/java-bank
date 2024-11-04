@@ -36,7 +36,7 @@ public class MainLoginGUI extends JFrame {
     }
 
     public MainLoginGUI() {
-        setTitle("Bank System - Select Login Type");
+        setTitle("Marabank - Select Login Type");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 400);
         setLocationRelativeTo(null);
@@ -46,7 +46,7 @@ public class MainLoginGUI extends JFrame {
         gbc.insets = new Insets(30, 15, 15, 15);
 
         // Title
-        JLabel titleLabel = new JLabel("Welcome to Bank System");
+        JLabel titleLabel = new JLabel("Welcome to Marabank");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -65,7 +65,7 @@ public class MainLoginGUI extends JFrame {
         gbc.insets = new Insets(5, 15, 15, 15);
         panel.add(clientLoginButton, gbc);
 
-        ImageIcon logoIcon = new ImageIcon(new ImageIcon(getClass().getResource("/images/logo.png")).getImage().getScaledInstance(100, 80, Image.SCALE_SMOOTH));
+        ImageIcon logoIcon = new ImageIcon(new ImageIcon(getClass().getResource("/images/logo.png")).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
        
         JLabel iconLabel = new JLabel(logoIcon);
         iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));

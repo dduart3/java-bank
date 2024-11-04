@@ -38,7 +38,7 @@ public class LoginGUI extends JFrame {
         this.mainLoginGUI = mainLoginGUI;
         this.authController = new AuthController();
 
-        setTitle("Bank System - " + accountType + " Login");
+        setTitle("Marabank - " + accountType + " Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 300);
         setLocationRelativeTo(null);
@@ -143,7 +143,7 @@ public class LoginGUI extends JFrame {
                 new ClientGUI(username).setVisible(true);
                 break;
             default:
-                //new ClientGUI(username).setVisible(true);
+            JOptionPane.showMessageDialog(null, "Invalid account type");
                 break;
         }
     }

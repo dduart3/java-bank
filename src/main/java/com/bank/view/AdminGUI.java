@@ -37,7 +37,7 @@ public class AdminGUI extends JFrame {
         this.reportController = new ReportController();
         this.username = username;
 
-        setTitle("Bank Admin Panel");
+        setTitle("Marabank Admin Panel");
         setSize(800, 600);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

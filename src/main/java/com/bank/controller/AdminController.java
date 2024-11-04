@@ -40,6 +40,14 @@ public class AdminController {
         return adminService.updateNames(accountNumber, newFirstName, newLastName, AccountType.CLIENT);
     }
 
+    public boolean toggleFreezeAccount(String accountNumber) {
+        return adminService.toggleFreezeAccount(accountNumber);
+    }
+    
+    public boolean isAccountFrozen(String accountNumber) {
+        return adminService.isAccountFrozen(accountNumber);
+    }
+
     public List<ClientAccount> getAllClientAccounts() {
         return adminService.getAllClientAccounts();
     }
