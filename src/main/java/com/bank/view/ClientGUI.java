@@ -36,8 +36,6 @@ public class ClientGUI extends JFrame {
     private JPanel contentPanel;  // Add this field
     private JButton selectedButton;
     
-
-
     public ClientGUI(String username) {
         this.username = username;
         this.clientController = new ClientController();
@@ -74,19 +72,17 @@ public class ClientGUI extends JFrame {
 
     public void refreshAccountOverview() {
         CardLayout cl = (CardLayout) contentPanel.getLayout();
-        // Recreate the account overview panel with fresh data
-        contentPanel.remove(0);
-        
-        contentPanel.add(new AccountOverviewPanel(accountNumber), "Account Overview");
-        // Show the updated panel
+        // Get the existing panel and update it
+        AccountOverviewPanel overviewPanel = new AccountOverviewPanel(accountNumber);
+        contentPanel.add(overviewPanel, "Account Overview");
         cl.show(contentPanel, "Account Overview");
     }
-
+    
     public void refreshTransactionHistory() {
-        // Recreate the transaction history panel with fresh data
-        contentPanel.remove(3);
-        contentPanel.add(new TransactionHistoryPanel(accountNumber), "Transaction History");
+        TransactionHistoryPanel historyPanel = new TransactionHistoryPanel(accountNumber);
+        contentPanel.add(historyPanel, "Transaction History");
     }
+    
 
     private JPanel createNavPanel() {
         JPanel navPanel = new JPanel();

@@ -59,8 +59,10 @@ public class DepositPanel extends JPanel {
             double amount = Double.parseDouble(amountField.getText());
             boolean success = clientController.deposit(accountNumber, amount);
             showResult(success);
-            clientGUI.refreshAccountOverview();
-            clientGUI.refreshTransactionHistory();
+            if(success){
+                clientGUI.refreshAccountOverview();
+                clientGUI.refreshTransactionHistory();
+            }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Please enter a valid amount");
         }
@@ -69,7 +71,7 @@ public class DepositPanel extends JPanel {
     private void showResult(boolean success) {
         String message = success ? 
             "Deposit successful!" : 
-            "Deposit failed. Please try again.";
+            "Deposit failed. Please enter a valid amount";
         JOptionPane.showMessageDialog(this, message);
         if (success) {
             amountField.setText("");

@@ -66,14 +66,17 @@ public class TransferPanel extends JPanel {
             double amount = Double.parseDouble(amountField.getText());
             boolean success = clientController.transfer(accountNumber, recipient, amount);
             showResult(success);
-            clientGUI.refreshAccountOverview();
+            if(success){
+                clientGUI.refreshAccountOverview();
+                clientGUI.refreshTransactionHistory();
+            }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Please enter a valid amount");
         }
     }
 
     private void showResult(boolean success) {
-        String message = success ? "Transfer successful!" : "Transfer failed. Please try again.";
+        String message = success ? "Transfer successful!" : "Transfer failed. Please check the recipient's account number and amount and try again.";
         JOptionPane.showMessageDialog(this, message);
         if (success) {
             amountField.setText("");

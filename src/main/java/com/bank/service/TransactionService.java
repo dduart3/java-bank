@@ -120,8 +120,6 @@ public class TransactionService {
             return false;
         }
 
-        System.out.println("Account balance before withdrawal: " + account.getBalance());
-
         account.withdraw(amount);
 
         Transaction withdrawTransaction = new Transaction(

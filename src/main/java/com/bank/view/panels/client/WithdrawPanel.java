@@ -56,15 +56,17 @@ public class WithdrawPanel extends JPanel {
             double amount = Double.parseDouble(amountField.getText());
             boolean success = clientController.withdraw(accountNumber, amount);
             showResult(success);
-            clientGUI.refreshAccountOverview();
-            clientGUI.refreshTransactionHistory();
+            if(success){
+                clientGUI.refreshAccountOverview();
+                clientGUI.refreshTransactionHistory();
+            }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Please enter a valid amount");
         }
     }
 
     private void showResult(boolean success) {
-        String message = success ? "Withdrawal successful!" : "Withdrawal failed. Please try again.";
+        String message = success ? "Withdrawal successful!" : "Withdrawal failed. Please enter a valid amount.";
         JOptionPane.showMessageDialog(this, message);
         if (success) {
             amountField.setText("");
