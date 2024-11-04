@@ -1,6 +1,7 @@
 package com.bank.service;
 
 import java.util.List;
+import java.util.Random;
 
 import com.bank.model.AccountType;
 import com.bank.model.AdminAccount;
@@ -17,8 +18,10 @@ public class AdminService {
         this.adminRepository = AdminAccountRepository.getInstance();
         this.clientRepository = ClientAccountRepository.getInstance();
     }
+
     /* CREATE DATA */
-    public void createClientAccount(String username, String firstName, String lastName, String password, String accountNumber) {
+    public void createClientAccount(String username, String firstName, String lastName, String password) {
+        String accountNumber = generateAccountNumber();
         ClientAccount newAccount = new ClientAccount(username, firstName, lastName, password, accountNumber);
         clientRepository.save(newAccount);
     }
@@ -28,10 +31,8 @@ public class AdminService {
         AdminAccount newAccount = new AdminAccount(username, firstName, lastName, password);
         adminRepository.save(newAccount);
     }
-    
-    
+
     /* READ DATA */
-    
     public List<AdminAccount> getAllAdminAccounts() {
         return adminRepository.findAll();
     }
@@ -42,8 +43,7 @@ public class AdminService {
 
 
     /* UPDATE DATA */
-
-     public boolean updateUsername(String accountNumber, String newUsername, AccountType accountType) {
+    public boolean updateUsername(String accountNumber, String newUsername, AccountType accountType) {
         switch (accountType) {
             case CLIENT:
                 ClientAccount clientAccount = clientRepository.findByAccountNumber(accountNumber);
@@ -96,5 +96,15 @@ public class AdminService {
         }
     }
 
+    /*Utility Methods*/
+    private String generateAccountNumber() {
+        Random random = new Random();
+        String accountNumber = String.format("%04d", random.nextInt(10000));
+        ClientAccount account = clientRepository.findByAccountNumber(accountNumber);
 
+        if (account != null) {
+            return generateAccountNumber(); //Recursive call to generate a new account number
+        }
+        return accountNumber;
+    }
 }

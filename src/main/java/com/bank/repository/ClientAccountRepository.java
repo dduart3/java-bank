@@ -27,9 +27,6 @@ public class ClientAccountRepository extends IAccountRepository<ClientAccount> {
     }
 
     public OperationResult save(ClientAccount account) {
-        if(!isValidAccountNumber(account.getAccountNumber())){
-            return OperationResult.INVALID_ACCOUNT_NUMBER;
-        }
         return save(clientAccounts, account, FILE_PATH);
     }
 
@@ -40,7 +37,7 @@ public class ClientAccountRepository extends IAccountRepository<ClientAccount> {
     public ClientAccount findById(String id) {
         return findById(clientAccounts, id);
     }
-    
+
     public ClientAccount findByUsername(String username) {
         return findByUsername(clientAccounts, username);
     }

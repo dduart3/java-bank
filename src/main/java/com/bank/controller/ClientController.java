@@ -9,16 +9,16 @@ public class ClientController {
         this.clientService = new ClientService();
     }
 
+    public String getClientFullName(String accountNumber) {
+        return clientService.getClientFullName(accountNumber);
+    }
+
     public String getAccountNumber(String username) {
         return clientService.getAccountNumber(username);
     }
 
     public double getAccountBalance(String accountNumber) {
         return clientService.getAccountBalance(accountNumber);
-    }
-
-    public String getLastTransaction(String accountNumber) {
-        return clientService.getLastTransaction(accountNumber);
     }
 
     public boolean transfer(String fromAccount, String toAccount, double amount) {

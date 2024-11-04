@@ -1,9 +1,6 @@
 package com.bank.service;
 
-import java.time.format.DateTimeFormatter;
-
 import com.bank.model.ClientAccount;
-import com.bank.model.Transaction;
 import com.bank.repository.ClientAccountRepository;
 
 public class ClientService {
@@ -26,16 +23,9 @@ public class ClientService {
         return account.getBalance();
     }
 
-    public String getLastTransaction(String accountNumber) {
-        Transaction lastTransaction = transactionService.getLastTransaction(accountNumber);
-        if (lastTransaction != null) {
-            return String.format("%s: $%.2f on %s",
-                    lastTransaction.getType(),
-                    lastTransaction.getAmount(),
-                    lastTransaction.getTimestamp().format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm"))
-            );
-        }
-        return "No transactions yet";
+    public String getClientFullName(String accountNumber) {
+        ClientAccount account = clientRepository.findByAccountNumber(accountNumber);
+        return account.getFirstName() + " " + account.getLastName();
     }
 
     public boolean transfer(String fromAccount, String toAccount, double amount) {

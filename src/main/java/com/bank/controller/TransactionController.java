@@ -21,6 +21,10 @@ public class TransactionController {
         return transactionService.getLastTransaction(accountNumber);
     }
 
+    public String getLastTransactionFormatted(String accountNumber) {
+        return transactionService.getLastTransactionFormatted(accountNumber);
+    }
+
     public List<Transaction> getTransactionsByType(String accountNumber, TransactionType type) {
         return transactionService.getTransactionsByType(accountNumber, type);
     }

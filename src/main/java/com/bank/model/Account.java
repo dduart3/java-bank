@@ -34,11 +34,11 @@ public abstract class Account implements Serializable {
         return username;
     }
 
-    public String getOwnerFirstName() {
+    public String getFirstName() {
         return firstName;
     }
 
-    public String getOwnerLastName() {
+    public String getLastName() {
         return lastName;
     }
 

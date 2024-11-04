@@ -3,72 +3,89 @@ package com.bank.view.panels.admin;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import com.bank.controller.AdminController;
+import com.bank.controller.ReportController;
 
 public class ReportsPanel extends JPanel {
-    private final AdminController controller;
-    private JTabbedPane tabbedPane;
+
+    private final AdminController adminController;
+    private final ReportController reportController;
+    private JTextArea reportDisplay;
 
     public ReportsPanel() {
-        this.controller = new AdminController();
+        this.adminController = new AdminController();
+        this.reportController = new ReportController();
+
         setLayout(new BorderLayout());
         setBackground(new Color(33, 33, 33));
 
-        createTabbedPane();
-        createExportControls();
+        createControls();
+        createReportDisplay();
     }
 
-    private void createTabbedPane() {
-        tabbedPane = new JTabbedPane();
-        tabbedPane.setBackground(new Color(45, 45, 45));
-        tabbedPane.setForeground(Color.WHITE);
+    private void createControls() {
+        JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        controlPanel.setBackground(new Color(33, 33, 33));
+    
+        JButton accountSummaryBtn = createButton("Account Summary Report");
+        JButton transactionHistoryBtn = createButton("Transaction History Report");
+        JButton dailyBalanceBtn = createButton("Daily Balance Report");
+    
+        accountSummaryBtn.addActionListener(e -> generateReport("ACCOUNT_SUMMARY"));
+        transactionHistoryBtn.addActionListener(e -> generateReport("TRANSACTION_HISTORY"));
+        dailyBalanceBtn.addActionListener(e -> generateReport("DAILY_BALANCE"));
+    
+        controlPanel.add(accountSummaryBtn);
+        controlPanel.add(transactionHistoryBtn);
+        controlPanel.add(dailyBalanceBtn);
+    
+        add(controlPanel, BorderLayout.NORTH);
+    }
+    
+    private void generateReport(String reportType) {
+        String report = reportController.generateReport(reportType);
+        reportDisplay.setText(report);
+    }
+    
 
-        tabbedPane.addTab("Transaction Summary", createTransactionSummaryPanel());
-        tabbedPane.addTab("Account Statistics", createAccountStatsPanel());
-        tabbedPane.addTab("System Activity", createSystemActivityPanel());
-
-        add(tabbedPane, BorderLayout.CENTER);
+    private JButton createButton(String text) {
+        JButton button = new JButton(text);
+        button.setBackground(new Color(45, 45, 45));
+        button.setForeground(Color.WHITE);
+        return button;
     }
 
-    private JPanel createTransactionSummaryPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(new Color(33, 33, 33));
-        
-        // Add chart or table showing transaction data
-        return panel;
+    private void createReportDisplay() {
+        reportDisplay = new JTextArea();
+        reportDisplay.setEditable(false);
+        reportDisplay.setBackground(new Color(45, 45, 45));
+        reportDisplay.setForeground(Color.WHITE);
+        reportDisplay.setFont(new Font("Monospaced", Font.PLAIN, 14));
+
+        JScrollPane scrollPane = new JScrollPane(reportDisplay);
+        scrollPane.getViewport().setBackground(new Color(45, 45, 45));
+        add(scrollPane, BorderLayout.CENTER);
     }
 
-    private JPanel createAccountStatsPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(new Color(33, 33, 33));
-        
-        // Add account statistics visualization
-        return panel;
+    private void generateDailyBalanceReport() {
+        String report = reportController.generateReport("DAILY_BALANCE");
+        reportDisplay.setText(report);
     }
 
-    private JPanel createSystemActivityPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(new Color(33, 33, 33));
-        
-        // Add system activity log
-        return panel;
+    private void generateActivityReport() {
+        String report = reportController.generateReport("TRANSACTION_HISTORY");
+        reportDisplay.setText(report);
     }
 
-    private void createExportControls() {
-        JPanel exportPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        exportPanel.setBackground(new Color(45, 45, 45));
-        
-        JButton exportPdfBtn = new JButton("Export as PDF");
-        JButton exportCsvBtn = new JButton("Export as CSV");
-        
-        exportPanel.add(exportPdfBtn);
-        exportPanel.add(exportCsvBtn);
-        
-        add(exportPanel, BorderLayout.SOUTH);
+    public void refresh() {
     }
+
+    
 }

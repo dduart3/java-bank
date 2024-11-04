@@ -12,14 +12,16 @@ public class Transaction implements Serializable {
     private final double amount;
     private final LocalDateTime timestamp;
     private final String description;
+    private final String accountNumber;
 
 
-    public Transaction(TransactionType type, double amount, String description) {
+    public Transaction(TransactionType type, double amount, String description, String accountNumber) {
         this.id = UUID.randomUUID().toString();
         this.type = type;
         this.amount = amount;
         this.timestamp = LocalDateTime.now();
         this.description = description;
+        this.accountNumber = accountNumber;
     }
     
         @Override
@@ -44,5 +46,8 @@ public class Transaction implements Serializable {
 
         public String getId() {
             return id;
+        }
+        public String getAccountNumber() {
+            return accountNumber;
         }
 }

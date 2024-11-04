@@ -1,6 +1,7 @@
 package com.bank.service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +31,18 @@ public class TransactionService {
             return null;
         }
         return transactions.get(transactions.size() - 1);
+    }
+
+    public String getLastTransactionFormatted(String accountNumber) {
+        Transaction lastTransaction = getLastTransaction(accountNumber);
+        if (lastTransaction != null) {
+            return String.format("%s: $%.2f on %s",
+                    lastTransaction.getType(),
+                    lastTransaction.getAmount(),
+                    lastTransaction.getTimestamp().format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm"))
+            );
+        }
+        return "No transactions yet";
     }
 
     public List<Transaction> getTransactionsByType(String accountNumber, TransactionType type) {
@@ -69,9 +82,9 @@ public class TransactionService {
 
         // Log transactions
         Transaction transferSentTransaction = new Transaction(TransactionType.TRANSFER_SENT, amount,
-                "Transfer to account: " + toAccountNumber);
+                "Transfer to account: " + toAccountNumber, fromAccountNumber);
         Transaction transferReceivedTransaction = new Transaction(TransactionType.TRANSFER_RECEIVED, amount,
-                "Transfer from account: " + fromAccountNumber);
+                "Transfer from account: " + fromAccountNumber, toAccountNumber);
 
         sender.addTransaction(transferSentTransaction);
         receiver.addTransaction(transferReceivedTransaction);
@@ -91,7 +104,8 @@ public class TransactionService {
         Transaction depositTransaction = new Transaction(
                 TransactionType.DEPOSIT,
                 amount,
-                "Deposit to account"
+                "Deposit to account",
+                accountNumber
         );
 
         account.addTransaction(depositTransaction);
@@ -113,7 +127,8 @@ public class TransactionService {
         Transaction withdrawTransaction = new Transaction(
                 TransactionType.WITHDRAWAL,
                 amount,
-                "Withdrawal from account"
+                "Withdrawal from account",
+                accountNumber
         );
 
         account.addTransaction(withdrawTransaction);

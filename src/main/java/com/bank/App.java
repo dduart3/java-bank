@@ -17,7 +17,7 @@ public final class App {
             ClientAccountRepository clientRepository = ClientAccountRepository.getInstance();
 
             // Create some sample accounts for testing
-            clientRepository.save(new ClientAccount("cliente", "1234", "David", "Duarte", "1234"));
+            clientRepository.save(new ClientAccount("cliente", "David", "Duarte", "1234", "1234"));
             adminRepository.save(new AdminAccount("admin", "1234", "David", "Duarte"));
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {

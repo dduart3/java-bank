@@ -12,7 +12,7 @@ public class ClientAccount extends Account {
     private boolean frozen = false;
     private double balance;
 
-    public ClientAccount(String username, String password, String firstName, String lastName, String accountNumber) {
+    public ClientAccount(String username, String firstName, String lastName, String password, String accountNumber) {
         super(username, password, AccountType.CLIENT, firstName, lastName);
         this.accountNumber = accountNumber;
         this.balance = 0.0;

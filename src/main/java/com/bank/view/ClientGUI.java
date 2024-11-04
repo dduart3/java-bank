@@ -180,8 +180,6 @@ public class ClientGUI extends JFrame {
         clickedButton.setBorder(BorderFactory.createMatteBorder(0, 3, 0, 0, new Color(0, 150, 136)));
     }
 
-
-
     private void handleLogout() {
         new MainLoginGUI().setVisible(true);
         this.dispose();

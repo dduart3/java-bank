@@ -1,6 +1,9 @@
 package com.bank.controller;
 
+import java.util.List;
+
 import com.bank.model.AccountType;
+import com.bank.model.ClientAccount;
 import com.bank.service.AdminService;
 import com.bank.service.ReportService;
 
@@ -13,8 +16,8 @@ public class AdminController {
         this.reportService = new ReportService();
     }
 
-    public void createClientAccount(String username, String firstName, String lastName, String password, String accountNumber) {
-        adminService.createClientAccount(username, firstName, lastName, password, accountNumber);
+    public void createClientAccount(String username, String firstName, String lastName, String password) {
+        adminService.createClientAccount(username, firstName, lastName, password);
     }
 
     public void createAdminAccount(String username, String firstName, String lastName, String password) {
@@ -36,5 +39,8 @@ public class AdminController {
     public boolean updateClientNames(String accountNumber, String newFirstName, String newLastName) {
         return adminService.updateNames(accountNumber, newFirstName, newLastName, AccountType.CLIENT);
     }
-        
+
+    public List<ClientAccount> getAllClientAccounts() {
+        return adminService.getAllClientAccounts();
+    }
 }
