@@ -72,6 +72,10 @@ public class TransactionService {
             return false;
         }
 
+        if(sender.isFrozen() ||  receiver.isFrozen()) {
+            return false;
+        }
+
         if (sender.getBalance() < amount) {
             return false;
         }
@@ -96,6 +100,10 @@ public class TransactionService {
         ClientAccount account = clientRepository.findByAccountNumber(accountNumber);
 
         if (account == null || amount <= 0) {
+            return false;
+        }
+
+        if (account.isFrozen()) {
             return false;
         }
 
