@@ -9,7 +9,7 @@ public class ClientAccountRepository extends AccountRepository<ClientAccount> {
 
     private static ClientAccountRepository instance;
     private final List<ClientAccount> accounts;
-    private static final String FILE_PATH = "client_accounts.dat";
+    private static final String FILE_PATH = "client_accounts.txt";
 
     private ClientAccountRepository() {
         this.accounts = loadAccounts();

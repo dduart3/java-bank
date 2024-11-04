@@ -9,7 +9,7 @@ public class AdminAccountRepository extends AccountRepository<AdminAccount> {
 
     private static AdminAccountRepository instance;
     private final List<AdminAccount> accounts;
-    private static final String FILE_PATH = "admin_accounts.dat";
+    private static final String FILE_PATH = "admin_accounts.txt";
 
     private AdminAccountRepository() {
         this.accounts = loadAccounts();
