@@ -48,4 +48,8 @@ public class AdminController {
     public List<ClientAccount> getAllClientAccounts() {
         return adminService.getAllClientAccounts();
     }
+
+    public boolean deleteClientAccount(String accountNumber) {
+        return adminService.deleteClientAccount(accountNumber);
+    }
 }

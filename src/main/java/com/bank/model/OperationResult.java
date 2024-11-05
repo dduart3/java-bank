@@ -11,7 +11,7 @@ public enum OperationResult {
     INVALID_ACCOUNT_NUMBER("Invalid account number", "Account number must be 10 digits"),
     SUCCESS("Success", "Operation completed successfully"),
     INVALID_USERNAME("Invalid Username", "Username can only contain letters and numbers"), 
-    USERNAME_TOO_SHORT("Invalid Username", "Username must be at least 6 characters long"),
+    USERNAME_TOO_SHORT("Invalid Username", "Username must be at least 4 characters long"),
     USERNAME_TOO_LONG("Invalid Username", "Username cannot exceed 12 characters"),
     USERNAME_TAKEN("Username Error", "This username is already taken"),
     PASSWORD_TOO_SHORT("Invalid Password", "Password must be at least 6 characters long"),

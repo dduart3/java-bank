@@ -56,4 +56,11 @@ public class ClientAccountRepository extends AccountRepository<ClientAccount> {
     private List<ClientAccount> loadAccounts() {
         return loadAccountsFromFile(FILE_PATH);
     }
+
+    public boolean delete(String accountNumber) {
+        ClientAccount account = findByAccountNumber(accountNumber);
+        boolean removedAccount = accounts.remove(account);
+        save();
+        return removedAccount;
+    }
 }

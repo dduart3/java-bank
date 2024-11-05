@@ -129,6 +129,18 @@ public class AdminService {
         return account != null && account.isFrozen();
     }
 
+    // DELETE DATA
+
+    public boolean deleteClientAccount(String accountNumber) {
+        ClientAccountRepository repository = ClientAccountRepository.getInstance();
+        ClientAccount account = repository.findByAccountNumber(accountNumber);
+        
+        if (account != null) {
+            return clientRepository.delete(accountNumber);
+        }
+        return false;
+    }
+
     /*Utility Methods*/
     private String generateAccountNumber() {
         int totalAccounts = clientRepository.getAccountCount();

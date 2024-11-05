@@ -30,7 +30,7 @@ public class ValidationService {
         if (!username.matches("[a-zA-Z0-9]+")) {
             return OperationResult.INVALID_USERNAME;
         }
-        if (username.length() < 6) {
+        if (username.length() < 4) {
             return OperationResult.USERNAME_TOO_SHORT;
         }
         if (username.length() > 12) {
